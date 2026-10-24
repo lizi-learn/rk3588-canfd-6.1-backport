@@ -1,0 +1,192 @@
+#!/usr/bin/python3
+# SPDX-License-Identifier: GPL-2.0-only
+import datetime
+from collections import Counter
+import select
+import fcntl
+import json
+import os
+from pathlib import Path
+import socket
+import struct
+import subprocess
+import time
+
+PORTS = {'can0': 'fea60000.can', 'can1': 'fea70000.can'}
+DRIVER = 'lbm5_canfd'
+PLATFORM = Path('/sys/bus/platform')
+
+
+def run(*args):
+    return subprocess.run(args, check=True, capture_output=True, text=True, timeout=20).stdout
+
+
+def state(name):
+    return json.loads(run('ip', '-j', '-details', '-statistics', 'link', 'show', name))[0]
+
+
+def configure(name, data=None, loopback=False):
+    run('ip', 'link', 'set', name, 'down')
+    args = ['ip', 'link', 'set', name, 'type', 'can', 'bitrate', '1000000',
+            'sample-point', '0.8', 'loopback', 'on' if loopback else 'off',
+            'berr-reporting', 'on', 'restart-ms', '0' if loopback else '100']
+    if data:
+        args += ['dbitrate', str(data), 'dsample-point', '0.8', 'fd', 'on']
+    else:
+        args += ['fd', 'off']
+    run(*args)
+    run('ip', 'link', 'set', name, 'txqueuelen', '128')
+    run('ip', 'link', 'set', name, 'up')
+
+
+def transfer(name, data, count):
+    configure(name, data, True)
+    before = state(name)
+    info = before['linkinfo']['info_data']
+    assert info['clock'] == 300000000
+    assert info['bittiming']['bitrate'] == 1000000
+    if data:
+        assert info['data_bittiming']['bitrate'] == data
+        assert before['mtu'] == 72 and 'FD' in info['ctrlmode']
+    lengths = [0, 1, 2, 3, 4, 5, 6, 7, 8, 12, 16, 20, 24, 32, 48, 64] if data else list(range(9))
+    began = time.monotonic()
+    flags_seen = {}
+    expected_rx = Counter()
+    actual_rx = Counter()
+    with socket.socket(socket.AF_CAN, socket.SOCK_RAW, socket.CAN_RAW) as s:
+        s.setsockopt(socket.SOL_CAN_RAW, socket.CAN_RAW_RECV_OWN_MSGS, 1)
+        if data:
+            s.setsockopt(socket.SOL_CAN_RAW, socket.CAN_RAW_FD_FRAMES, 1)
+        s.settimeout(2)
+        s.bind((name,))
+        for n in range(count):
+            ident = (0x80000000 | 0x18FF0000 | (n % 65536)) if n % 2 else 0x300 + n % 128
+            length = lengths[n % len(lengths)]
+            payload = bytes((n + j * 37) & 255 for j in range(length))
+            sent = struct.pack('=IBB2x64s', ident, length, 5, payload) if data else struct.pack('=IB3x8s', ident, length, payload)
+            assert s.send(sent) == len(sent)
+            key = (ident, length, payload)
+            expected_rx[key] += 1
+            deadline = time.monotonic() + 2
+            while True:
+                s.settimeout(max(.001, deadline-time.monotonic()))
+                try:
+                    received, ancillary, flags, address = s.recvmsg(72)
+                except TimeoutError as error:
+                    raise RuntimeError(json.dumps({'timeout_index': n, 'interface': name,
+                        'data_bitrate': data, 'expected_id': ident, 'length': length,
+                        'hardware_rx_so_far': sum(actual_rx.values()),
+                        'flags': flags_seen, 'state': state(name)})) from error
+                assert len(received) == len(sent)
+                if data:
+                    rid, rlen, rflags, rpayload = struct.unpack('=IBB2x64s', received)
+                    assert rflags & 1 and rflags & 4, rflags
+                else:
+                    rid, rlen, rpayload = struct.unpack('=IB3x8s', received)
+                rkey = (rid, rlen, rpayload[:rlen])
+                assert rkey in expected_rx, ('unexpected received content', n, rkey)
+                flags_seen[str(flags)] = flags_seen.get(str(flags), 0) + 1
+                if flags & socket.MSG_CONFIRM:
+                    assert rkey == key, ('unexpected TX completion', n, rkey)
+                    break
+                assert not flags & socket.MSG_DONTROUTE, ('unexpected software echo', flags)
+                actual_rx[rkey] += 1
+        while select.select([s], [], [], .05)[0]:
+            received, ancillary, flags, address = s.recvmsg(72)
+            if data:
+                rid, rlen, rflags, rpayload = struct.unpack('=IBB2x64s', received)
+                assert rflags & 1 and rflags & 4, rflags
+            else:
+                rid, rlen, rpayload = struct.unpack('=IB3x8s', received)
+            assert not flags & (socket.MSG_CONFIRM | socket.MSG_DONTROUTE)
+            rkey = (rid, rlen, rpayload[:rlen])
+            assert rkey in expected_rx
+            actual_rx[rkey] += 1
+            flags_seen[str(flags)] = flags_seen.get(str(flags), 0) + 1
+    assert actual_rx == expected_rx, ('hardware RX count/content mismatch', sum(actual_rx.values()), count)
+    after = state(name)
+    assert after['linkinfo']['info_data']['berr_counter'] == {'tx': 0, 'rx': 0}
+    for key in ['bus_error', 'bus_off', 'error_warning', 'error_passive']:
+        assert after['linkinfo']['info_xstats'][key] == before['linkinfo']['info_xstats'][key], (name, key)
+    for direction in ['rx', 'tx']:
+        assert after['stats64'][direction]['errors'] == before['stats64'][direction]['errors']
+    return {'interface': name, 'status': 'pass', 'nominal_bitrate': 1000000,
+            'data_bitrate': data, 'frames_checked': count, 'standard_frames': (count + 1) // 2,
+            'extended_frames': count // 2, 'payload_lengths': lengths,
+            'BRS': bool(data), 'method': 'controller LOOPBACK with RXSTX payload-match TX completion; userspace validates local echo',
+            'external_transceiver_and_wiring_verified': False,
+            'hardware_internal_rx_verified': True, 'hardware_rx_frames': sum(actual_rx.values()),
+            'seconds': round(time.monotonic()-began, 3), 'message_flags': flags_seen,
+            'before': before, 'after': after}
+
+
+
+def cross(source, destination, count):
+    before = {n:state(n) for n in [source,destination]}
+    with socket.socket(socket.AF_CAN,socket.SOCK_RAW,socket.CAN_RAW) as tx, socket.socket(socket.AF_CAN,socket.SOCK_RAW,socket.CAN_RAW) as rx:
+        for s in [tx,rx]: s.setsockopt(socket.SOL_CAN_RAW,socket.CAN_RAW_FD_FRAMES,1)
+        tx.setsockopt(socket.SOL_CAN_RAW,socket.CAN_RAW_LOOPBACK,0)
+        tx.bind((source,));rx.bind((destination,));rx.settimeout(2)
+        sizes=[0,1,2,3,4,5,6,7,8,12,16,20,24,32,48,64]
+        for i in range(count):
+            ident=(0x80000000|0x18FF0000|i%65536) if i%2 else 0x300+i%128
+            length=sizes[i%len(sizes)]
+            payload=bytes((i+j*37)&255 for j in range(length))
+            frame=struct.pack('=IBB2x64s',ident,length,5,payload)
+            tx.send(frame)
+            data,anc,flags,addr=rx.recvmsg(72)
+            assert not flags & (socket.MSG_CONFIRM|socket.MSG_DONTROUTE)
+            rid,rlen,rflags,rpayload=struct.unpack('=IBB2x64s',data)
+            assert (rid,rlen,rpayload[:rlen])==(ident,length,payload) and rflags&1
+    after={n:state(n) for n in [source,destination]}
+    for n in after:
+        assert after[n]['linkinfo']['info_data']['berr_counter']=={'tx':0,'rx':0}
+        for k in ['bus_error','bus_off','error_warning','error_passive']:
+            assert before[n]['linkinfo']['info_xstats'][k]==after[n]['linkinfo']['info_xstats'][k]
+    return {'status':'pass','source':source,'destination':destination,'frames_checked':count,'BRS':True,'software_echo_enabled':False,'external_receive_transmit_verified':True,'before':before,'after':after}
+
+
+def main():
+    import argparse
+    parser=argparse.ArgumentParser(description='LBM5 CAN FD 1M arbitration / up to 5M data benchmark')
+    mode=parser.add_mutually_exclusive_group(required=True)
+    mode.add_argument('--internal',action='store_true')
+    mode.add_argument('--cross',action='store_true',help='Requires CAN-A/CAN-B wiring; not previously physically tested')
+    parser.add_argument('--count',type=int,default=10000)
+    parser.add_argument('--json',dest='output')
+    args=parser.parse_args()
+    if os.geteuid()!=0:parser.error('Run as root')
+    if not 1<=args.count<=100000:parser.error('count must be 1..100000')
+    lock=open('/run/lbm5-interface-test.lock','w');fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+    report={'started_at':datetime.datetime.now().astimezone().isoformat(),'status':'running','mode':'internal' if args.internal else 'external-cross','tests':[],'external_wiring_required':bool(args.cross)}
+    for n,dev in PORTS.items():
+        assert Path('/sys/class/net',n,'device').resolve().name==dev
+        assert state(n)['linkinfo']['info_data']['bittiming_const']['name']=='lbm5_canfd'
+    try:
+        if args.internal:
+            for rate in [None,1000000,2000000,5000000]:
+                for n in PORTS:
+                    item=transfer(n,rate,args.count);report['tests'].append(item)
+                    print(json.dumps({k:item[k] for k in ['interface','data_bitrate','frames_checked','hardware_rx_frames','status']}),flush=True)
+        else:
+            assert not run('cangw','-L').strip(),'Remove software gateways before external test'
+            for n in PORTS:configure(n,5000000,False)
+            for source,destination in [('can0','can1'),('can1','can0')]:
+                report['tests'].append(cross(source,destination,args.count))
+        report['status']='pass'
+    except Exception as error:
+        report['status']='fail';report['error']=repr(error)
+        report['failure_state']={n:state(n) for n in PORTS}
+    finally:
+        try:
+            for n in PORTS:configure(n,5000000,False)
+            report['final']={n:state(n) for n in PORTS}
+        except Exception as error:
+            report['status']='fail';report['restore_error']=repr(error)
+        report['finished_at']=datetime.datetime.now().astimezone().isoformat()
+        if args.output:Path(args.output).write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
+        print(json.dumps({'status':report['status'],'error':report.get('error'),'output':args.output}),flush=True)
+    raise SystemExit(0 if report['status']=='pass' else 1)
+
+
+if __name__=='__main__':main()

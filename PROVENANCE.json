@@ -1,0 +1,80 @@
+{
+  "repository": "https://github.com/torvalds/linux",
+  "commit": "5b0764a53235d3c77e1ed674e836e1b3fe1a4b1f",
+  "commit_date": "2026-10-24T04:29:02Z",
+  "retrieved_at": "2026-10-25T05:33:58.949507+08:00",
+  "purpose": "GPL-2.0 Linux CAN-FD driver backport; source preserved with notices",
+  "license_claim": "SPDX GPL-2.0 in source headers",
+  "files": [
+    {
+      "file": "Makefile",
+      "url": "https://raw.githubusercontent.com/torvalds/linux/5b0764a53235d3c77e1ed674e836e1b3fe1a4b1f/drivers/net/can/rockchip/Makefile",
+      "sha256": "c7f2a83f4d2df173197c4e1d7ab1c0a9527c461c8e96a27aecad249bff11bc15",
+      "bytes": 342
+    },
+    {
+      "file": "rockchip_canfd-core.c",
+      "url": "https://raw.githubusercontent.com/torvalds/linux/5b0764a53235d3c77e1ed674e836e1b3fe1a4b1f/drivers/net/can/rockchip/rockchip_canfd-core.c",
+      "sha256": "65d67c5df0d9216b7411430797a40d7b021f7fe0ba30e94c01bcb4962b68bf14",
+      "bytes": 27590
+    },
+    {
+      "file": "rockchip_canfd-ethtool.c",
+      "url": "https://raw.githubusercontent.com/torvalds/linux/5b0764a53235d3c77e1ed674e836e1b3fe1a4b1f/drivers/net/can/rockchip/rockchip_canfd-ethtool.c",
+      "sha256": "a74b29eb4cb56a9c5718175a5b8091a83206159dc21ac16842d7c5d342238522",
+      "bytes": 1995
+    },
+    {
+      "file": "rockchip_canfd-rx.c",
+      "url": "https://raw.githubusercontent.com/torvalds/linux/5b0764a53235d3c77e1ed674e836e1b3fe1a4b1f/drivers/net/can/rockchip/rockchip_canfd-rx.c",
+      "sha256": "f6627f456c041877a098be6185e9fea87df3d696bb555dcbfe96c34958ec7b2d",
+      "bytes": 7597
+    },
+    {
+      "file": "rockchip_canfd-timestamp.c",
+      "url": "https://raw.githubusercontent.com/torvalds/linux/5b0764a53235d3c77e1ed674e836e1b3fe1a4b1f/drivers/net/can/rockchip/rockchip_canfd-timestamp.c",
+      "sha256": "6e53a3355df6570afb7b6e8301855838d4f72a9c4cdb808b1e073b33779c7ce4",
+      "bytes": 3227
+    },
+    {
+      "file": "rockchip_canfd-tx.c",
+      "url": "https://raw.githubusercontent.com/torvalds/linux/5b0764a53235d3c77e1ed674e836e1b3fe1a4b1f/drivers/net/can/rockchip/rockchip_canfd-tx.c",
+      "sha256": "03d499722dd9072d55a418e543b4dbc21e022772b28145dc84aeb784532b0d5f",
+      "bytes": 4516
+    },
+    {
+      "file": "rockchip_canfd.h",
+      "url": "https://raw.githubusercontent.com/torvalds/linux/5b0764a53235d3c77e1ed674e836e1b3fe1a4b1f/drivers/net/can/rockchip/rockchip_canfd.h",
+      "sha256": "9c18bbbccbca7b46177d2c11f7696782e094db480fb3c5fbb72584429a5520ce",
+      "bytes": 18715
+    },
+    {
+      "file": "upstream-netdev-queues.h",
+      "url": "https://raw.githubusercontent.com/torvalds/linux/5b0764a53235d3c77e1ed674e836e1b3fe1a4b1f/include/net/netdev_queues.h",
+      "sha256": "a200c9c32d970bdc3b3b158f0942daa44e4882f9bbfc2ef710b7b11b8f4ea13a",
+      "bytes": 15161,
+      "purpose": "API compatibility reference"
+    },
+    {
+      "file": "upstream-can-dev.c",
+      "url": "https://raw.githubusercontent.com/torvalds/linux/5b0764a53235d3c77e1ed674e836e1b3fe1a4b1f/drivers/net/can/dev/dev.c",
+      "sha256": "6b10bc8d899f9962e3eb9644172fa2a720c1dfde115cce2db59707e24baaac07",
+      "bytes": 17234,
+      "purpose": "API compatibility reference"
+    },
+    {
+      "file": "upstream-can-dev.h",
+      "url": "https://raw.githubusercontent.com/torvalds/linux/5b0764a53235d3c77e1ed674e836e1b3fe1a4b1f/include/linux/can/dev.h",
+      "sha256": "a834eea459393d589f76478ca3d7045f1ffd6f32be25623376ffe95635cf262b",
+      "bytes": 5895,
+      "purpose": "API compatibility reference"
+    },
+    {
+      "file": "upstream-netdevice.h",
+      "url": "https://raw.githubusercontent.com/torvalds/linux/5b0764a53235d3c77e1ed674e836e1b3fe1a4b1f/include/linux/netdevice.h",
+      "sha256": "6da6d3da3b1ca32b58e47faa71e96646836e787a92830f895891678122da54e2",
+      "bytes": 185479,
+      "purpose": "queue helper backport reference"
+    }
+  ]
+}

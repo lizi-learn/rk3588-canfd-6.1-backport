@@ -1,0 +1,18 @@
+name: Source integrity
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  offline-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - name: Validate provenance and evidence boundaries
+        run: python3 scripts/check_source.py
+      - name: Compile board overlay
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y device-tree-compiler
+          make overlay

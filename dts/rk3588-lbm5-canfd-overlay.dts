@@ -1,0 +1,19 @@
+/dts-v1/;
+/plugin/;
+/ {
+    compatible = "rockchip,rk3588";
+    fragment@0 {
+        target-path = "/can@fea60000";
+        __overlay__ {
+            compatible = "rockchip,rk3588-canfd";
+            assigned-clock-rates = <300000000>;
+        };
+    };
+    fragment@1 {
+        target-path = "/can@fea70000";
+        __overlay__ {
+            compatible = "rockchip,rk3588-canfd";
+            assigned-clock-rates = <300000000>;
+        };
+    };
+};

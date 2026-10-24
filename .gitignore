@@ -1,0 +1,15 @@
+*.o
+*.ko
+*.mod
+*.mod.c
+.*.cmd
+Module.symvers
+modules.order
+.tmp_versions/
+build/
+__pycache__/
+*.pyc
+.venv/
+.env
+*.pem
+*.key

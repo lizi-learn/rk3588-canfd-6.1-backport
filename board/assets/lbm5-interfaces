@@ -1,0 +1,148 @@
+#!/usr/bin/python3
+# SPDX-License-Identifier: GPL-2.0-only
+"""Configure the tested LBM5-DIBAN-V01A interface profile, without sending frames."""
+import argparse
+import json
+import os
+from pathlib import Path
+import subprocess
+import termios
+import tty
+
+PORTS = {'can0': 'fea60000.can', 'can1': 'fea70000.can'}
+UARTS = {'/dev/ttyS4': 'feb70000.serial', '/dev/ttyS7': 'feba0000.serial'}
+
+
+def run(*args):
+    return subprocess.run(args, check=True, capture_output=True, text=True).stdout
+
+
+def configuration():
+    values = {}
+    config = Path('/etc/default/lbm5-interfaces')
+    if config.exists():
+        for line in config.read_text().splitlines():
+            if line and not line.lstrip().startswith('#') and '=' in line:
+                key, value = line.split('=', 1)
+                values[key.strip()] = value.strip().strip('"\'')
+    return values
+
+
+def settings():
+    values = configuration()
+    rate = int(os.environ.get('CAN_BITRATE', values.get('CAN_BITRATE', '1000000')))
+    fallback = os.environ.get('RS485_BAUD', values.get('RS485_BAUD', '115200'))
+    bauds = {device: int(os.environ.get(key, values.get(key, fallback)))
+             for device, key in [('/dev/ttyS4', 'RS485_1_BAUD'), ('/dev/ttyS7', 'RS485_2_BAUD')]}
+    if not 10000 <= rate <= 1000000:
+        raise ValueError('CAN_BITRATE must be between 10000 and 1000000')
+    if any(baud not in [1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200, 230400, 460800, 921600, 1000000] for baud in bauds.values()):
+        raise ValueError('Unsupported RS485 baud rate')
+    return rate, bauds
+
+
+def verify_mapping():
+    for name, hardware in PORTS.items():
+        actual = Path('/sys/class/net', name, 'device').resolve().name
+        if actual != hardware:
+            raise RuntimeError(f'{name} maps to {actual}, expected {hardware}')
+    for device, hardware in UARTS.items():
+        if device=='/dev/ttyS7' and configuration().get('RS485_2_ENABLED','1')!='1':
+            continue
+        if hardware not in Path('/sys/class/tty', Path(device).name, 'device').resolve().parts:
+            raise RuntimeError(f'{device} does not map to {hardware}')
+
+
+def configure(name, rate, loopback=False):
+    values = configuration()
+    fd_value = os.environ.get('CAN_FD', values.get('CAN_FD', '0'))
+    if fd_value not in ['0', '1']:
+        raise ValueError('CAN_FD must be 0 or 1')
+    fd_mode = fd_value == '1'
+    data_rate = int(os.environ.get('CAN_DBITRATE', values.get('CAN_DBITRATE', '5000000')))
+    if fd_mode and (data_rate not in [1000000, 2000000, 5000000] or data_rate < rate):
+        raise ValueError('FD input is restricted; this experimental release configures only nominal 1M/data 5M')
+    info = json.loads(run('ip', '-j', '-details', 'link', 'show', name))[0]['linkinfo']['info_data']
+    supports_fd = 'data_bittiming_const' in info
+    if fd_mode and not supports_fd:
+        raise RuntimeError('CAN FD driver is not bound; check lbm5_canfd module and device-tree overlay')
+    args = ['ip', 'link', 'set', name, 'type', 'can', 'bitrate', str(rate),
+            'sample-point', '0.8', 'loopback', 'on' if loopback else 'off',
+            'listen-only', 'off', 'berr-reporting', 'on',
+            'restart-ms', '0' if loopback else '100']
+    if supports_fd:
+        args += ['sjw','16']
+    if fd_mode:
+        if rate!=1000000 or data_rate!=5000000:
+            raise RuntimeError('This experimental release only configures FD nominal 1M / data 5M.')
+        if info['clock']!=300000000:
+            raise RuntimeError('Validated FD timing requires a 300 MHz CAN clock.')
+        args += ['dtq','33','dprop-seg','2','dphase-seg1','2',
+                 'dphase-seg2','1','dsjw','1','fd','on']
+    elif supports_fd:
+        args += ['fd', 'off']
+    run('ip', 'link', 'set', name, 'down')
+    run(*args)
+    run('ip', 'link', 'set', name, 'txqueuelen', '128')
+    run('ip', 'link', 'set', name, 'up')
+    current = json.loads(run('ip', '-j', '-details', 'link', 'show', name))[0]['linkinfo']['info_data']
+    if current['bittiming']['bitrate'] != rate:
+        raise RuntimeError(f'{name}: nominal bitrate differs from requested value')
+    if fd_mode and current['data_bittiming']['bitrate'] != data_rate:
+        raise RuntimeError(f'{name}: data bitrate differs from requested value')
+
+
+def configure_uart(device, baud):
+    fd = os.open(device, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
+    try:
+        tty.setraw(fd)
+        attrs = termios.tcgetattr(fd)
+        attrs[2] &= ~(termios.CSIZE | termios.PARENB | termios.CSTOPB | termios.CRTSCTS)
+        attrs[2] |= termios.CS8 | termios.CLOCAL | termios.CREAD
+        attrs[4] = attrs[5] = getattr(termios, 'B'+str(baud))
+        termios.tcsetattr(fd, termios.TCSANOW, attrs)
+    finally:
+        os.close(fd)
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('action', choices=['start', 'stop', 'status'])
+    args = parser.parse_args()
+    if args.action == 'status':
+        print(run('ip', '-details', '-statistics', 'link', 'show', 'type', 'can'))
+        for label, alias in [('RS48_1 / UART4', '/dev/rs485_1'), ('RS48_2 / UART7', '/dev/rs485_2')]:
+            if alias=='/dev/rs485_2' and configuration().get('RS485_2_ENABLED','1')!='1':
+                print(label+': disabled (spare/unpopulated)');continue
+            print(label+':', Path(alias).resolve())
+            print(run('stty', '-F', alias, '-a'))
+        return
+    if os.geteuid() != 0:
+        parser.error('start/stop requires root')
+    verify_mapping()
+    if args.action == 'start':
+        control = Path('/sys/kernel/debug/dynamic_debug/control')
+        if control.exists():
+            control.write_text('file drivers/net/can/dev/rx-offload.c -p\nfile drivers/net/can/rockchip/rk3568_can.c -p\n')
+    if args.action == 'stop':
+        for name in PORTS:
+            run('ip', 'link', 'set', name, 'down')
+    else:
+        rate, bauds = settings()
+        for name in PORTS:
+            configure(name, rate)
+        for device, baud in bauds.items():
+            if device=='/dev/ttyS7' and configuration().get('RS485_2_ENABLED','1')!='1':
+                continue
+            configure_uart(device, baud)
+        print(json.dumps({'can0': PORTS['can0'], 'can1': PORTS['can1'],
+                          'bitrate': rate, 'mode': 'normal',
+                          'CAN_FD': configuration().get('CAN_FD', '0'),
+                          'data_bitrate': configuration().get('CAN_DBITRATE') ,
+                          'rs485_1': '/dev/ttyS4', 'rs485_2': '/dev/ttyS7',
+                          'bauds': bauds, 'format': '8N1',
+                          'direction': 'MAX13488 AutoDirection'}))
+
+
+if __name__ == '__main__':
+    main()

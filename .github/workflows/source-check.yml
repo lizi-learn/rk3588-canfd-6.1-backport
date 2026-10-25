@@ -16,3 +16,8 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y device-tree-compiler
           make overlay
+
+      - name: Board configuration safety checks (offline only)
+        run: |
+          python3 -m unittest discover -s tests -v
+          for f in board/*.sh; do bash -n "$f"; done

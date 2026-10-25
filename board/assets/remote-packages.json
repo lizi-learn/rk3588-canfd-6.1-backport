@@ -1,0 +1,9 @@
+{
+  "todesk": {
+    "filename": "todesk_4.8.5.1_arm64.deb",
+    "version": "4.8.5.1",
+    "url": "https://mirrors.sdu.edu.cn/spark-store-repository/aarch64-store/tools/todesk/todesk_4.8.5.1_arm64.deb",
+    "sha256": "96e42bbbfeed26734b3f866e116473265fd2e9921bafc1e745bb00156db72252",
+    "source_label": "Spark Store community package via SDU mirror (not a vendor-hosted archive)"
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "device_alias": "lubancat-test",
+  "started_at": "2026-10-25T20:32:11.391331+08:00",
+  "source_sha256": "4086b4bc74dc49324ba154699516107f8b3bb9e3027ebd43e83f5aabf700bff2",
+  "pass": false,
+  "driver": "stock rk3568_can",
+  "can": [
+    {
+      "direction": "can0 -> can1",
+      "kind": "standard",
+      "bitrate": 1000000,
+      "target_frames": 1,
+      "sent_frames": 1,
+      "received_unique_frames": 1,
+      "missing_frames": 0,
+      "duplicate_frames": 0,
+      "wrong_frames": 0,
+      "elapsed_seconds": 0.0,
+      "pass": true
+    },
+    {
+      "direction": "can1 -> can0",
+      "kind": "standard",
+      "bitrate": 1000000,
+      "target_frames": 1,
+      "sent_frames": 1,
+      "received_unique_frames": 1,
+      "missing_frames": 0,
+      "duplicate_frames": 0,
+      "wrong_frames": 0,
+      "elapsed_seconds": 0.0,
+      "pass": true
+    },
+    {
+      "direction": "can0 -> can1",
+      "kind": "standard",
+      "bitrate": 1000000,
+      "target_frames": 10000,
+      "sent_frames": 10000,
+      "received_unique_frames": 10000,
+      "missing_frames": 0,
+      "duplicate_frames": 0,
+      "wrong_frames": 0,
+      "elapsed_seconds": 5.0,
+      "pass": true
+    },
+    {
+      "direction": "can1 -> can0",
+      "kind": "standard",
+      "bitrate": 1000000,
+      "target_frames": 10000,
+      "sent_frames": 10000,
+      "received_unique_frames": 10000,
+      "missing_frames": 0,
+      "duplicate_frames": 0,
+      "wrong_frames": 0,
+      "elapsed_seconds": 5.0,
+      "pass": true
+    },
+    {
+      "direction": "can0 -> can1",
+      "kind": "extended",
+      "bitrate": 1000000,
+      "target_frames": 2000,
+      "sent_frames": 2000,
+      "received_unique_frames": 2000,
+      "missing_frames": 0,
+      "duplicate_frames": 0,
+      "wrong_frames": 0,
+      "elapsed_seconds": 1.0,
+      "pass": true
+    },
+    {
+      "direction": "can1 -> can0",
+      "kind": "extended",
+      "bitrate": 1000000,
+      "target_frames": 2000,
+      "sent_frames": 2000,
+      "received_unique_frames": 1999,
+      "missing_frames": 1,
+      "duplicate_frames": 1,
+      "wrong_frames": 0,
+      "elapsed_seconds": 5.009,
+      "pass": false
+    }
+  ],
+  "reason": "One extended frame missing and one duplicated; no pass-by-retry claim. Final kit uses the RK3588-specific backport for both modes."
+}

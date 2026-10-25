@@ -1,0 +1,40 @@
+{
+  "device_alias": "lubancat-test",
+  "pass": false,
+  "data_integrity_pass": true,
+  "frames": 24002,
+  "counter_delta": {
+    "can0": {
+      "restarts": 0,
+      "bus_error": 0,
+      "arbitration_lost": 0,
+      "error_warning": 0,
+      "error_passive": 0,
+      "bus_off": 0,
+      "rx_errors": 0,
+      "rx_dropped": 0,
+      "rx_over_errors": 0,
+      "tx_errors": 0,
+      "tx_dropped": 0
+    },
+    "can1": {
+      "restarts": 0,
+      "bus_error": 0,
+      "arbitration_lost": 0,
+      "error_warning": 0,
+      "error_passive": 0,
+      "bus_off": 0,
+      "rx_errors": 0,
+      "rx_dropped": 0,
+      "rx_over_errors": 0,
+      "tx_errors": 19,
+      "tx_dropped": 0
+    }
+  },
+  "ethtool_observed": {
+    "can0_tx_extended_as_standard_errors": 0,
+    "can1_tx_extended_as_standard_errors": 19
+  },
+  "interpretation": "Dedicated driver identified and retried extended-as-standard events (erratum 6). Application payloads complete; zero-error acceptance not met. No claim that replacing the driver eliminated the underlying condition.",
+  "source_sha256": "a244c98b243026197207d789b7af6a7c6fbfc815a08ceccf48c10c968be9d504"
+}

@@ -1,112 +1,87 @@
-# RK3588 CAN FD Linux 6.1 backport
+# RK3588 CAN FD backport + LBM5 board kit
 
-面向 RK3588 / Linux 6.1.172 ARM64 的实验性 CAN FD 驱动回移项目。
-驱动主体来自 Linux 上游；本项目提供旧内核 API 兼容、板级设备树示例、构建步骤和 CAN 专用验证工具。
+RK3588 / Linux 6.1.172 的实验性 CAN FD 驱动回移，以及 LBM5-DIBAN-V01A 自研底板的配置与独立验证工具。驱动主体来自 Linux 上游，本项目完成 6.1 API 兼容、板级适配、位时序调优及实机验证，保留原作者版权与 GPL-2.0-only 许可。
 
-**状态：experimental。已完成一台设备的编译、启动绑定和控制器内部硬件回环；外部 CAN 总线尚未接线验收。**
-本仓库是第二个开源项目的源码仓库，不提供在线服务，也没有默认绿色健康状态或定时在线探测。
+**v0.2.0：发布优化与独立验证工具，并保留真实通过和失败记录。5M FD 重启复测出现新增总线错误，稳定性未通过；不能称 5M 已优化完成。** 这是当前接线条件下的有限台架实测，不代表长线极限或生产认证。默认持久化配置为普通 CAN 1M。
 
-## 已完成的验证
-
-| 项目 | 结果 |
+| 实测项目（2026-10-25） | 结果 |
 | --- | --- |
-| 设备 | RK3588 核心板 + LBM5-DIBAN-V01A 自研底板 |
-| 系统 | Ubuntu 22.04 ARM64，Linux 6.1.172 |
-| 模块 | `lbm5_canfd`；模块内版本 `1.0-experimental` |
-| 普通 CAN | 名义速率 1 Mbps；两路内部硬件回环通过 |
-| CAN FD+BRS | 仲裁 1 Mbps；数据 1 / 2 / 5 Mbps 内部硬件回环通过 |
-| 正式测试量 | 重启前后各 8 组，每组 10,000 个应用发送帧，合计 160,000 帧 |
-| 重启自动绑定 | 已通过；最终恢复 FD 1M / 5M，控制器回环关闭 |
-| 外部收发器 / 接插件 / 线缆 | **尚未验证** |
-| FD 数据 3 Mbps | 内部回环超时，未解决，未列为合格档位 |
+| 普通 CAN 1M | 历史 24,002 帧零错误；原厂复测丢失/重复各1，专用驱动复测数据完整但发现19次、最终26次勘误6恢复，零错误验收未完成 |
+| FD+BRS 1M/5M | 历史单次 43,202 帧零错误；发布复测同样全部收到但新增总线错误 49/45，稳定性不通过 |
+| RS485 UART4 / UART7 | 9600 / 115200 双向字节核对、200 次半双工换向通过 |
+| 启动 systemd 指标 | 基线 60.614s；优化后 6.627s，后续7.151s，发布最终6.598s；Wi-Fi 就绪约日志时间轴 23–24s |
+| 无屏桌面 / GPU | GNOME X11、1080p、Mali-G610 Panfrost accelerated=yes |
+| 远程桌面 | NoMachine 9.2 服务认证与桌面流记录；ToDesk 4.8.5.1 服务/固定密码配置存在，对端完整交互未验收 |
 
-500 kbps 是先前配置值，不是控制器上限。5 Mbps 指 FD+BRS 帧的数据阶段，仲裁和普通帧仍为 1 Mbps。
-5M 内部通过不代表 3M 或其他档位也通过，不代表已探明整机物理最高速率。
+公开的脱敏实测摘要、失败参数和复测记录见 [board/evidence](board/evidence/)。原始日志保存在本地，摘要包含原始文件 SHA256，便于核对。仓库不会默认显示“硬件已绿灯”；CI 只验证离线源码与构建，不连接设备。
 
-## 来源与本项目改动
+## 两个独立入口
 
-- 上游：[`torvalds/linux`](https://github.com/torvalds/linux)，固定提交
-  `5b0764a53235d3c77e1ed674e836e1b3fe1a4b1f`。
-- 原驱动作者及版权通知保留；上游包含基于 Rockchip 驱动的实现，不能将本项目表述为从零自主研发全部驱动。
-- 本项目将较新的 CAN 结构、队列、时间戳和平台 remove 等 API 回移到 6.1；模块改名隔离。
-- 保留上游 RK3588 RX FIFO 位域、勘误 5/6 和 TDC=0 的处理。
-- CAN 时钟固定为 300 MHz；验证设备通过已有 CPLL 分频实现，未改变 PLL 频率。
-- 两路设备树示例只改 compatible 与 assigned-clock-rates，原 CAN 引脚复用插件仍需启用。
-
-原始源码、来源 URL、SHA256 和兼容辅助函数的参考原文均保存在仓库中，见
-[THIRD_PARTY.md](THIRD_PARTY.md) 与 [PROVENANCE.json](PROVENANCE.json)。
-
-## 构建
-
-先取得与运行内核**完全匹配**的厂商内核头文件、构建配置及符号版本。
-仅同为 Linux 6.1 或 RK3588 并不足以证明 ABI 匹配；本项目未验证通用发行版 6.1 或其他 BSP。
+先阅读 [适用条件、接线和回退说明](docs/BOARD_KIT.md)。适用镜像须已含 GNOME/GDM、Mesa 26.2.3，以及现有 NoMachine 服务端或自行取得的适用许可安装包。ToDesk 缺失时使用锁定哈希的社区镜像包，来源在清单中明示。
 
 ```sh
-sudo apt-get install build-essential device-tree-compiler python3 iproute2 can-utils
-uname -r
-test -d /lib/modules/$(uname -r)/build
-make KDIR=/lib/modules/$(uname -r)/build CAN_CC=aarch64-linux-gnu-gcc
+git clone --branch v0.2.0 https://github.com/lizi-learn/rk3588-canfd-6.1-backport.git
+cd rk3588-canfd-6.1-backport
+python3 scripts/check_source.py
+
+# 优化：默认普通 CAN 1M、两路 485 115200、无屏桌面与启动配置
+sudo ./board/optimize.sh --carrier lbm5-diban-v01a
+sudo reboot
+```
+
+重连后，在同一目录独立执行：
+
+```sh
+# 健康检查，不发总线数据
+sudo ./board/verify.sh
+# 已按说明正确对插并停止业务后，验证实际收发
+sudo ./board/verify.sh --physical
+```
+
+仅研究复现 5M FD（当前稳定性未通过）时选择实验参数并重启，验证仍用同一个独立入口：
+
+```sh
+sudo ./board/optimize.sh --carrier lbm5-diban-v01a --can-mode fd5m
+sudo reboot
+# 重连并进入仓库目录
+sudo ./board/verify.sh --physical
+```
+
+`--dry-run` 只查看优化计划；`--rs485-2 off` 用于第二路未焊接的旧板。工具不自动重启、不重置远程密码。配置备份支持 `board/rollback.sh`。详细 PDF 见 [发布附件](https://github.com/lizi-learn/rk3588-canfd-6.1-backport/releases/tag/v0.2.0) 与 `docs/pdf/`。
+
+也可使用固定版本启动器（优化、验证依旧两条命令；下载包校验 SHA256）：
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/lizi-learn/rk3588-canfd-6.1-backport/v0.2.0/board/bootstrap.sh -o /tmp/rk3588-kit.sh
+bash /tmp/rk3588-kit.sh optimize --carrier lbm5-diban-v01a
+# 手动重启并重连后
+bash /tmp/rk3588-kit.sh verify --physical
+```
+
+## 5M 的关键结果
+
+500k 是配置值，不是上限。普通 CAN 已实测 1M；5M 只指 CAN FD+BRS 数据阶段，仲裁保持 1M。
+
+自动位时序 BRP2 / 数据采样 80% 曾出现“全部帧收到、错误增加”，不能算合格。历史零错误单次使用的参数为 CAN 时钟 300MHz、仲裁 1M / 采样80% / SJW16，数据 BRP10 / 6TQ / 采样83.3% / SJW1，TDC=0。实验性 fd5m 入口保留这组参数供复现，重启复测仍有错误；BRP12/20 的补充探测也未解决。应检查实装收发器、终端、接地、线束和示波器波形，未取得这些证据前不归因于单一硬件或软件原因。
+
+未探明整机物理最高速率。此前旧板 3M 内回环超时依然保留为未解决问题；本次没有重新宣称 3M 通过。没有多节点仲裁、EMC、长线、温度或长时间寿命测试。
+
+## 驱动构建与来源
+
+上游固定提交 `5b0764a53235d3c77e1ed674e836e1b3fe1a4b1f`，来源及兼容引用见 [THIRD_PARTY.md](THIRD_PARTY.md)、[PROVENANCE.json](PROVENANCE.json)。回移覆盖 CAN 结构、队列、时间戳和平台 remove API，保留 RK3588 RX FIFO 位域、勘误5/6和 TDC=0；模块隔离名 `lbm5_canfd`。不能把项目描述成从零自研驱动。
+
+```sh
+# 在目标板，使用与正在运行内核完全匹配的厂商头文件/config/Module.symvers
+sudo apt-get install build-essential gcc-aarch64-linux-gnu device-tree-compiler
+make KDIR=/lib/modules/$(uname -r)/build
 make overlay
 make check
-modinfo driver/lbm5_canfd.ko
 ```
 
-验证设备使用 GCC 11.4.0 和厂商 `linux-headers-6.1.172`。`make check` 只做离线来源与交付检查，不能替代内核编译或硬件通信测试。
-如果交叉编译，应明确设置目标内核构建目录和对应编译器；不要用开发电脑自己的内核头文件。
+只同为 6.1.172 不足以保证 ABI。不能跳过编译错误、强制 vermagic 或复用另一内核的 .ko。普通 1M 和 FD 5M 均使用 RK3588 专用回移驱动（FD 可关闭）。原厂 rk3568_can 在封装复测时曾出现扩展帧重复/缺失，保留该失败记录；不作为新发布默认驱动。当前板级入口现场编译，不发布可随意跨 BSP 装载的模块二进制。
 
-## 安装与使用
+## 历史材料
 
-详细步骤见 [docs/INSTALL.md](docs/INSTALL.md)。先为目标设备新建文件备份，再安装模块、设备树插件并重启。
-不提供会自动覆盖整份启动文件的一键安装脚本。该仓库不调整 UART、远程桌面、网络、音频或显示设置。
+根目录 `evidence/verification-summary.json` 是 v0.1.0 **另一台旧设备**的 160,000 帧内部硬件回环记录，外部未接线的历史事实不改写。[原手动安装说明](docs/INSTALL.md)、[旧验证工具与边界](docs/VERIFICATION.md)、[已知问题](docs/KNOWN_ISSUES.md) 作为驱动开发参考保留；新板的外部 5M 请使用 `board/` 工具及最新操作说明，避免旧工具自动选择的时序。
 
-```sh
-# After installation and reboot; these settings interrupt CAN traffic.
-sudo ip link set can0 down
-sudo ip link set can0 type can bitrate 1000000 sample-point 0.8 \
-  dbitrate 5000000 dsample-point 0.8 fd on loopback off \
-  listen-only off berr-reporting on restart-ms 100
-sudo ip link set can0 txqueuelen 128
-sudo ip link set can0 up
-ip -details -statistics link show can0
-```
-
-对 `can1` 重复设置。示例未创建持久化参数服务；重启后的速率由目标设备自己的开机配置决定。
-如果原系统已有配置服务，需要同步其默认值，避免互相覆盖。
-
-## 验证工具
-
-先停止业务程序，并确保没有其他进程配置这两路 CAN。
-
-```sh
-sudo python3 tools/lbm5-canfd-test --internal --count 10000 \
-  --json /tmp/canfd-internal.json
-```
-
-工具固定检查 `can0 -> fea60000.can`、`can1 -> fea70000.can` 及 `lbm5_canfd` 驱动名。
-内部模式测试经典 1M，以及 FD 数据 1M / 2M / 5M；分别核对硬件内部 RX 与发送完成回显。
-**结束时固定恢复正常 FD 1M / 5M，不恢复调用前的业务速率；测试后应重新核对业务配置。**
-使用普通 Python 执行，不要加 `-O`，工具用 `assert` 做验收判定。
-
-外部交叉模式已经编写，**尚未实际执行**：
-
-```sh
-# Only after correct wiring, termination, and a clear physical test bus.
-sudo python3 tools/lbm5-canfd-test --cross --count 10000 \
-  --json /tmp/canfd-cross.json
-```
-
-此模式固定 FD 仲裁 1M / 数据 5M，两个方向各发指定帧数，要求软件 CAN 网关为空。
-接线条件和验证边界见 [docs/VERIFICATION.md](docs/VERIFICATION.md)。
-
-## 适用范围与维护
-
-- 仅 RK3588、上述两路映射和指定厂商内核完成验证。源码保留其他上游 compatible 条目，但不构成对 RK3568 等平台的适配承诺。
-- 未验证休眠恢复、多节点仲裁、长期负载、温度范围、EMC、线束极限和外部 5M 通信。
-- 内核升级后重新编译、检查符号 ABI、重启绑定并复测。
-- 3M 超时记录在 [docs/KNOWN_ISSUES.md](docs/KNOWN_ISSUES.md)，不以低速率推断必然可用。
-- 开源发布不代表原厂认证或生产放行。
-
-## License
-
-GPL-2.0-only，见 [LICENSE](LICENSE)。保留 Linux / Rockchip / Pengutronix 等原作者通知。
-公开内容包含驱动及工程适配源码，不包含设备登录信息、原始板卡图纸或私有运行日志。
+GPL-2.0-only，见 [LICENSE](LICENSE)。本仓库不含原始私有图纸、网络口令、远程桌面身份或原始私密日志。

@@ -1,0 +1,2 @@
+ACTION=="add|change", SUBSYSTEM=="tty", KERNEL=="ttyS4", SYMLINK+="rs485 rs485_1 rs48_1", GROUP="dialout", MODE="0660", ENV{ID_MM_DEVICE_IGNORE}="1"
+ACTION=="add|change", SUBSYSTEM=="tty", KERNEL=="ttyS7", SYMLINK+="rs485_2 rs48_2", GROUP="dialout", MODE="0660", ENV{ID_MM_DEVICE_IGNORE}="1"

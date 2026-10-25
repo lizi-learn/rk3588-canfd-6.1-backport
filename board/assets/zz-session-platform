@@ -1,0 +1,14 @@
+# Select Chromium's native backend for the active desktop session.
+CHROMIUM_FLAGS="$(printf '%s' "$CHROMIUM_FLAGS" | sed -E 's/(^| )--ozone-platform=[^ ]+//g')"
+case "${XDG_SESSION_TYPE:-}" in
+    x11) chromium_session_platform=x11 ;;
+    wayland) chromium_session_platform=wayland ;;
+    *) if [ -n "${WAYLAND_DISPLAY:-}" ]; then chromium_session_platform=wayland
+       elif [ -n "${DISPLAY:-}" ]; then chromium_session_platform=x11
+       else chromium_session_platform=auto; fi ;;
+esac
+export CHROMIUM_FLAGS="$CHROMIUM_FLAGS --ozone-platform=$chromium_session_platform"
+unset chromium_session_platform
+
+# Mali-G610 exposes GLES 3.1; select the matching ANGLE backend.
+export CHROMIUM_FLAGS="$CHROMIUM_FLAGS --use-gl=angle --use-angle=gles"

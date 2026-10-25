@@ -1,0 +1,83 @@
+{
+  "source_sha256": "5adf377a56f11659f57cea5b40dd9f7d6b2211a55989d6a3d02c4d7d15a41f4d",
+  "probes": [
+    {
+      "started_at": "2026-10-25T20:39:07.012568+08:00",
+      "brp": 12,
+      "sample_point": 0.8,
+      "pass": false,
+      "delta": {
+        "can0": {
+          "restarts": 0,
+          "bus_error": 23,
+          "arbitration_lost": 0,
+          "error_warning": 0,
+          "error_passive": 0,
+          "bus_off": 0,
+          "rx_errors": 19,
+          "rx_dropped": 0,
+          "rx_over_errors": 0,
+          "tx_errors": 4,
+          "tx_dropped": 0
+        },
+        "can1": {
+          "restarts": 0,
+          "bus_error": 31,
+          "arbitration_lost": 0,
+          "error_warning": 0,
+          "error_passive": 0,
+          "bus_off": 0,
+          "rx_errors": 4,
+          "rx_dropped": 0,
+          "rx_over_errors": 0,
+          "tx_errors": 27,
+          "tx_dropped": 0
+        }
+      },
+      "error": null
+    },
+    {
+      "started_at": "2026-10-25T20:39:13.098940+08:00",
+      "brp": 20,
+      "sample_point": 0.6666666666666666,
+      "pass": false,
+      "delta": null,
+      "error": "RuntimeError('frame failure')"
+    },
+    {
+      "started_at": "2026-10-25T20:39:17.166655+08:00",
+      "brp": 10,
+      "sample_point": 0.8333333333333334,
+      "pass": false,
+      "delta": {
+        "can0": {
+          "restarts": 0,
+          "bus_error": 24,
+          "arbitration_lost": 0,
+          "error_warning": 0,
+          "error_passive": 0,
+          "bus_off": 0,
+          "rx_errors": 18,
+          "rx_dropped": 0,
+          "rx_over_errors": 0,
+          "tx_errors": 6,
+          "tx_dropped": 0
+        },
+        "can1": {
+          "restarts": 0,
+          "bus_error": 27,
+          "arbitration_lost": 0,
+          "error_warning": 0,
+          "error_passive": 0,
+          "bus_off": 0,
+          "rx_errors": 6,
+          "rx_dropped": 0,
+          "rx_over_errors": 0,
+          "tx_errors": 21,
+          "tx_dropped": 0
+        }
+      },
+      "error": null
+    }
+  ]
+}

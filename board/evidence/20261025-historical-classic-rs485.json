@@ -1,0 +1,237 @@
+{
+  "device_alias": "lubancat-test",
+  "started_at": "2026-10-25T19:23:55.326555+08:00",
+  "ended_at": "2026-10-25T19:24:37.476483+08:00",
+  "source_sha256": "55489002441d87f02d9d11d49fe2173452723a09207fdc72e54c30dcd54083ed",
+  "driver": "stock rk3568_can; historical single passing run, not final default",
+  "pass": true,
+  "can": [
+    {
+      "direction": "can0 -> can1",
+      "kind": "standard",
+      "bitrate": 1000000,
+      "target_frames": 1,
+      "sent_frames": 1,
+      "received_unique_frames": 1,
+      "missing_frames": 0,
+      "duplicate_frames": 0,
+      "wrong_frames": 0,
+      "elapsed_seconds": 0.001,
+      "pass": true
+    },
+    {
+      "direction": "can1 -> can0",
+      "kind": "standard",
+      "bitrate": 1000000,
+      "target_frames": 1,
+      "sent_frames": 1,
+      "received_unique_frames": 1,
+      "missing_frames": 0,
+      "duplicate_frames": 0,
+      "wrong_frames": 0,
+      "elapsed_seconds": 0.0,
+      "pass": true
+    },
+    {
+      "direction": "can0 -> can1",
+      "kind": "standard",
+      "bitrate": 1000000,
+      "target_frames": 10000,
+      "sent_frames": 10000,
+      "received_unique_frames": 10000,
+      "missing_frames": 0,
+      "duplicate_frames": 0,
+      "wrong_frames": 0,
+      "elapsed_seconds": 5.0,
+      "pass": true
+    },
+    {
+      "direction": "can1 -> can0",
+      "kind": "standard",
+      "bitrate": 1000000,
+      "target_frames": 10000,
+      "sent_frames": 10000,
+      "received_unique_frames": 10000,
+      "missing_frames": 0,
+      "duplicate_frames": 0,
+      "wrong_frames": 0,
+      "elapsed_seconds": 5.0,
+      "pass": true
+    },
+    {
+      "direction": "can0 -> can1",
+      "kind": "extended",
+      "bitrate": 1000000,
+      "target_frames": 2000,
+      "sent_frames": 2000,
+      "received_unique_frames": 2000,
+      "missing_frames": 0,
+      "duplicate_frames": 0,
+      "wrong_frames": 0,
+      "elapsed_seconds": 1.0,
+      "pass": true
+    },
+    {
+      "direction": "can1 -> can0",
+      "kind": "extended",
+      "bitrate": 1000000,
+      "target_frames": 2000,
+      "sent_frames": 2000,
+      "received_unique_frames": 2000,
+      "missing_frames": 0,
+      "duplicate_frames": 0,
+      "wrong_frames": 0,
+      "elapsed_seconds": 1.0,
+      "pass": true
+    }
+  ],
+  "can_error_delta": {
+    "can0": {
+      "restarts": 0,
+      "bus_error": 0,
+      "arbitration_lost": 0,
+      "error_warning": 0,
+      "error_passive": 0,
+      "bus_off": 0,
+      "tx_errors": 0,
+      "tx_dropped": 0,
+      "rx_errors": 0,
+      "rx_dropped": 0,
+      "rx_over_errors": 0
+    },
+    "can1": {
+      "restarts": 0,
+      "bus_error": 0,
+      "arbitration_lost": 0,
+      "error_warning": 0,
+      "error_passive": 0,
+      "bus_off": 0,
+      "tx_errors": 0,
+      "tx_dropped": 0,
+      "rx_errors": 0,
+      "rx_dropped": 0,
+      "rx_over_errors": 0
+    }
+  },
+  "rs485": [
+    {
+      "direction": "/dev/ttyS4 -> /dev/ttyS7",
+      "baud": 115200,
+      "format": "8N1",
+      "sent_bytes": 32,
+      "received_bytes": 32,
+      "expected_bytes": 32,
+      "bad_blocks": 0,
+      "sender_echo_bytes": 32,
+      "tx_sha256": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+      "rx_sha256": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+      "elapsed_seconds": 0.017,
+      "pass": true
+    },
+    {
+      "direction": "/dev/ttyS7 -> /dev/ttyS4",
+      "baud": 115200,
+      "format": "8N1",
+      "sent_bytes": 32,
+      "received_bytes": 32,
+      "expected_bytes": 32,
+      "bad_blocks": 0,
+      "sender_echo_bytes": 32,
+      "tx_sha256": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+      "rx_sha256": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+      "elapsed_seconds": 0.013,
+      "pass": true
+    },
+    {
+      "direction": "/dev/ttyS4 -> /dev/ttyS7",
+      "baud": 9600,
+      "format": "8N1",
+      "sent_bytes": 4096,
+      "received_bytes": 4096,
+      "expected_bytes": 4096,
+      "bad_blocks": 0,
+      "sender_echo_bytes": 4096,
+      "tx_sha256": "6f350d9992774a970df70c9f3716cc4afdb27c62cdb994e0eebdac35591fb92e",
+      "rx_sha256": "6f350d9992774a970df70c9f3716cc4afdb27c62cdb994e0eebdac35591fb92e",
+      "elapsed_seconds": 4.397,
+      "pass": true
+    },
+    {
+      "direction": "/dev/ttyS7 -> /dev/ttyS4",
+      "baud": 9600,
+      "format": "8N1",
+      "sent_bytes": 4096,
+      "received_bytes": 4096,
+      "expected_bytes": 4096,
+      "bad_blocks": 0,
+      "sender_echo_bytes": 4096,
+      "tx_sha256": "3fb502d8f01a8f843e9c618e7db2cac466aa416cd2625c2ff8bb0b821169c1ff",
+      "rx_sha256": "3fb502d8f01a8f843e9c618e7db2cac466aa416cd2625c2ff8bb0b821169c1ff",
+      "elapsed_seconds": 4.393,
+      "pass": true
+    },
+    {
+      "direction": "/dev/ttyS4 -> /dev/ttyS7",
+      "baud": 115200,
+      "format": "8N1",
+      "sent_bytes": 65536,
+      "received_bytes": 65536,
+      "expected_bytes": 65536,
+      "bad_blocks": 0,
+      "sender_echo_bytes": 65536,
+      "tx_sha256": "7060558a4ab1f84b3930de0fbeff5fb8bfc7ac0e35605dd6d3244def5ac150a4",
+      "rx_sha256": "7060558a4ab1f84b3930de0fbeff5fb8bfc7ac0e35605dd6d3244def5ac150a4",
+      "elapsed_seconds": 8.76,
+      "pass": true
+    },
+    {
+      "direction": "/dev/ttyS7 -> /dev/ttyS4",
+      "baud": 115200,
+      "format": "8N1",
+      "sent_bytes": 65536,
+      "received_bytes": 65536,
+      "expected_bytes": 65536,
+      "bad_blocks": 0,
+      "sender_echo_bytes": 65536,
+      "tx_sha256": "58f98a4e98c224e4a5158b8c3dc6311df78f7e3a8668b15df1d5cdaeadda0f69",
+      "rx_sha256": "58f98a4e98c224e4a5158b8c3dc6311df78f7e3a8668b15df1d5cdaeadda0f69",
+      "elapsed_seconds": 8.773,
+      "pass": true
+    }
+  ],
+  "serial_error_delta": {
+    "/dev/ttyS4": {
+      "frame": 0,
+      "overrun": 0,
+      "parity": 0,
+      "break": 0,
+      "buf_overrun": 0
+    },
+    "/dev/ttyS7": {
+      "frame": 0,
+      "overrun": 0,
+      "parity": 0,
+      "break": 0,
+      "buf_overrun": 0
+    }
+  },
+  "rs485_turnaround": {
+    "requested_turns": 200,
+    "completed_turns": 200,
+    "passed_turns": 200,
+    "total_bytes": 11883,
+    "pass": true,
+    "failure": null
+  },
+  "uart_modes": {
+    "ttyS4": {
+      "mcr": "0x0",
+      "internal_loopback": false
+    },
+    "ttyS7": {
+      "mcr": "0x0",
+      "internal_loopback": false
+    }
+  },
+  "limits": "Current cross-wiring only; line length, impedance, termination measurements not recorded."
+}

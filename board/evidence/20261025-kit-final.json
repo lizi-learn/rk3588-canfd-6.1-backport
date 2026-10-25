@@ -1,0 +1,476 @@
+{
+  "started_at": "2026-10-25T20:48:37.037191+08:00",
+  "ended_at": "2026-10-25T20:49:19.708196+08:00",
+  "kit_version": "0.2.0",
+  "scope": "health + physical cross-port tests",
+  "hardware": {
+    "model": "Embedfire LubanCat-5IOB",
+    "kernel_release": "6.1.172",
+    "kernel_build": "#1 SMP Sat Oct 17 16:05:32 CST 2026",
+    "architecture": "aarch64"
+  },
+  "checks": {
+    "CAN normal mode and timing": {
+      "pass": true,
+      "detail": {
+        "can0": {
+          "ctrlmode": [
+            "BERR-REPORTING"
+          ],
+          "state": "ERROR-ACTIVE",
+          "berr_counter": {
+            "tx": 0,
+            "rx": 0
+          },
+          "restart_ms": 100,
+          "bittiming": {
+            "bitrate": 1000000,
+            "sample_point": 0.8,
+            "tq": 6,
+            "prop_seg": 59,
+            "phase_seg1": 60,
+            "phase_seg2": 30,
+            "sjw": 16
+          },
+          "bittiming_const": {
+            "name": "lbm5_canfd",
+            "tseg1": {
+              "min": 1,
+              "max": 256
+            },
+            "tseg2": {
+              "min": 1,
+              "max": 128
+            },
+            "sjw": {
+              "min": 1,
+              "max": 128
+            },
+            "brp": {
+              "min": 2,
+              "max": 512
+            },
+            "brp_inc": 2
+          },
+          "data_bittiming_const": {
+            "name": "lbm5_canfd",
+            "tseg1": {
+              "min": 1,
+              "max": 32
+            },
+            "tseg2": {
+              "min": 1,
+              "max": 16
+            },
+            "sjw": {
+              "min": 1,
+              "max": 16
+            },
+            "brp": {
+              "min": 2,
+              "max": 512
+            },
+            "brp_inc": 2
+          },
+          "clock": 300000000
+        },
+        "can1": {
+          "ctrlmode": [
+            "BERR-REPORTING"
+          ],
+          "state": "ERROR-ACTIVE",
+          "berr_counter": {
+            "tx": 0,
+            "rx": 0
+          },
+          "restart_ms": 100,
+          "bittiming": {
+            "bitrate": 1000000,
+            "sample_point": 0.8,
+            "tq": 6,
+            "prop_seg": 59,
+            "phase_seg1": 60,
+            "phase_seg2": 30,
+            "sjw": 16
+          },
+          "bittiming_const": {
+            "name": "lbm5_canfd",
+            "tseg1": {
+              "min": 1,
+              "max": 256
+            },
+            "tseg2": {
+              "min": 1,
+              "max": 128
+            },
+            "sjw": {
+              "min": 1,
+              "max": 128
+            },
+            "brp": {
+              "min": 2,
+              "max": 512
+            },
+            "brp_inc": 2
+          },
+          "data_bittiming_const": {
+            "name": "lbm5_canfd",
+            "tseg1": {
+              "min": 1,
+              "max": 32
+            },
+            "tseg2": {
+              "min": 1,
+              "max": 16
+            },
+            "sjw": {
+              "min": 1,
+              "max": 16
+            },
+            "brp": {
+              "min": 2,
+              "max": 512
+            },
+            "brp_inc": 2
+          },
+          "clock": 300000000
+        }
+      }
+    },
+    "RS485 aliases": {
+      "pass": true,
+      "detail": {
+        "rs485_1": "/dev/ttyS4",
+        "rs485_2": "/dev/ttyS7"
+      }
+    },
+    "ttyS4 115200 8N1": {
+      "pass": true,
+      "detail": "speed 115200 baud; rows 0; columns 0; line = 0;\nintr = ^C; quit = ^\\; erase = ^?; kill = ^U; eof = ^D; eol = <undef>;\neol2 = <undef>; swtch = <undef>; start = ^Q; stop = ^S; susp = ^Z; rprnt = ^R;\nwerase = ^W; lnext = ^V; discard = ^O; min = 1; time = 0;\n-parenb -parodd -cmspar cs8 hupcl -cstopb cread clocal -crtscts\n-ignbrk -brkint -ignpar -parmrk -inpck -istrip -inlcr -igncr -icrnl -ixon -ixoff\n-iuclc -ixany -imaxbel -iutf8\n-opost -olcuc -ocrnl onlcr -onocr -onlret -ofill -ofdel nl0 cr0 tab0 bs0 vt0 ff0\n-isig -icanon -iexten -echo echoe echok -echonl -noflsh -xcase -tostop -echoprt\nechoctl echoke -flusho -extproc\n"
+    },
+    "ttyS7 115200 8N1": {
+      "pass": true,
+      "detail": "speed 115200 baud; rows 0; columns 0; line = 0;\nintr = ^C; quit = ^\\; erase = ^?; kill = ^U; eof = ^D; eol = <undef>;\neol2 = <undef>; swtch = <undef>; start = ^Q; stop = ^S; susp = ^Z; rprnt = ^R;\nwerase = ^W; lnext = ^V; discard = ^O; min = 1; time = 0;\n-parenb -parodd -cmspar cs8 hupcl -cstopb cread clocal -crtscts\n-ignbrk -brkint -ignpar -parmrk -inpck -istrip -inlcr -igncr -icrnl -ixon -ixoff\n-iuclc -ixany -imaxbel -iutf8\n-opost -olcuc -ocrnl onlcr -onocr -onlret -ofill -ofdel nl0 cr0 tab0 bs0 vt0 ff0\n-isig -icanon -iexten -echo echoe echok -echonl -noflsh -xcase -tostop -echoprt\nechoctl echoke -flusho -extproc\n"
+    },
+    "gdm3.service": {
+      "pass": true,
+      "detail": "active"
+    },
+    "lbm5-can.service": {
+      "pass": true,
+      "detail": "active"
+    },
+    "nxserver.service": {
+      "pass": true,
+      "detail": "active"
+    },
+    "todeskd.service": {
+      "pass": true,
+      "detail": "active"
+    },
+    "systemd failed units": {
+      "pass": true,
+      "detail": []
+    },
+    "GNOME X11": {
+      "pass": true,
+      "detail": "x11"
+    },
+    "GPU accelerated": {
+      "pass": true,
+      "detail": "name of display: :0\ndisplay: :0  screen: 0\ndirect rendering: Yes\nExtended renderer info (GLX_MESA_query_renderer):\n    Vendor: Mesa (0x13b5)\n    Device: Mali-G610 MC4 (Panfrost) (0xffffffff)\n    Version: 26.2.3\n    Accelerated: yes\n    Video memory: 11958MB\n    Unified memory: yes\n    Preferred profile: core (0x1)\n    Max core profile version: 3.1\n    Max compat profile version: 3.1\n    Max GLES1 profile version: 1.1\n    Max GLES[23] profile version: 3.1\nOpenGL vendor string: Mesa\nOpenGL renderer string: Mali-G610 MC4 (Panfrost)\nOpenGL core profile version string: 3.1 Mesa 26.2.3\nOpenGL core profile shading language version string: 1.40\nOpenGL core profile context flags: (none)\n\nOpenGL version string: 3.1 Mesa 26.2.3\nOpenGL shading language version string: 1.40\nOpenGL context flags: (none)\n\nOpenGL ES profile version string: OpenGL ES 3.1 Mesa 26.2.3\nOpenGL ES profile shading language version string: OpenGL ES GLSL ES 3.10\n\n"
+    },
+    "headless 1080p": {
+      "pass": true,
+      "detail": "HDMI-1 connected primary 1920x1080+0+0 (normal left inverted right x axis y axis) 500mm x 281mm\n   1920x1080     60.00*+"
+    },
+    "NoMachine audio disabled": {
+      "pass": true,
+      "detail": "EnableAudio=0, AudioInterface=disabled"
+    },
+    "ToDesk fixed password present": {
+      "pass": true,
+      "detail": "Encrypted credential present; password authentication by a peer is outside this check."
+    }
+  },
+  "remote_peer_interaction": "not tested by this script",
+  "power_on_stopwatch": "not measured",
+  "can_mode": "classic1m",
+  "boot_measurement": "Startup finished in 2.590s (kernel) + 4.007s (userspace) = 6.598s \ngraphical.target reached after 3.981s in userspace",
+  "pass": false,
+  "failure_reason": "Physical acceptance failed; inspect CAN counter deltas and subtest results.",
+  "source_sha256": "297397b13ffb8542d35d8bc503e48ce72112078dda049144303e1cae6335dae2",
+  "physical": {
+    "started_at": "2026-10-25T20:48:37.550554+08:00",
+    "ended_at": "2026-10-25T20:49:19.707429+08:00",
+    "can_error_delta": {
+      "can0": {
+        "restarts": 0,
+        "bus_error": 0,
+        "arbitration_lost": 0,
+        "error_warning": 0,
+        "error_passive": 0,
+        "bus_off": 0,
+        "rx_errors": 0,
+        "rx_dropped": 0,
+        "rx_over_errors": 0,
+        "tx_errors": 0,
+        "tx_dropped": 0
+      },
+      "can1": {
+        "restarts": 0,
+        "bus_error": 0,
+        "arbitration_lost": 0,
+        "error_warning": 0,
+        "error_passive": 0,
+        "bus_off": 0,
+        "rx_errors": 0,
+        "rx_dropped": 0,
+        "rx_over_errors": 0,
+        "tx_errors": 26,
+        "tx_dropped": 0
+      }
+    },
+    "can_data_integrity_pass": true,
+    "can_zero_error_pass": false,
+    "serial_error_delta": {
+      "/dev/ttyS4": {
+        "frame": 0,
+        "overrun": 0,
+        "parity": 0,
+        "break": 0,
+        "buf_overrun": 0
+      },
+      "/dev/ttyS7": {
+        "frame": 0,
+        "overrun": 0,
+        "parity": 0,
+        "break": 0,
+        "buf_overrun": 0
+      }
+    },
+    "ethtool_before": {
+      "can0": {
+        "rx_fifo_empty_errors": 0,
+        "tx_extended_as_standard_errors": 0
+      },
+      "can1": {
+        "rx_fifo_empty_errors": 0,
+        "tx_extended_as_standard_errors": 0
+      }
+    },
+    "ethtool_after": {
+      "can0": {
+        "rx_fifo_empty_errors": 0,
+        "tx_extended_as_standard_errors": 0
+      },
+      "can1": {
+        "rx_fifo_empty_errors": 0,
+        "tx_extended_as_standard_errors": 26
+      }
+    },
+    "ethtool_delta": {
+      "can0": {
+        "rx_fifo_empty_errors": 0,
+        "tx_extended_as_standard_errors": 0
+      },
+      "can1": {
+        "rx_fifo_empty_errors": 0,
+        "tx_extended_as_standard_errors": 26
+      }
+    },
+    "rs485_turnaround": {
+      "requested_turns": 200,
+      "completed_turns": 200,
+      "total_bytes": 11883,
+      "pass": true
+    },
+    "uart_modes": {
+      "ttyS4": {
+        "mcr": "0x0",
+        "internal_loopback": false
+      },
+      "ttyS7": {
+        "mcr": "0x0",
+        "internal_loopback": false
+      }
+    },
+    "uart_modes_after": {
+      "ttyS4": {
+        "mcr": "0x0",
+        "internal_loopback": false
+      },
+      "ttyS7": {
+        "mcr": "0x0",
+        "internal_loopback": false
+      }
+    },
+    "pass": false,
+    "can": [
+      {
+        "direction": "can0 -> can1",
+        "kind": "standard",
+        "bitrate": 1000000,
+        "target_frames": 1,
+        "sent_frames": 1,
+        "received_unique_frames": 1,
+        "missing_frames": 0,
+        "duplicate_frames": 0,
+        "wrong_frames": 0,
+        "elapsed_seconds": 0.001,
+        "pass": true
+      },
+      {
+        "direction": "can1 -> can0",
+        "kind": "standard",
+        "bitrate": 1000000,
+        "target_frames": 1,
+        "sent_frames": 1,
+        "received_unique_frames": 1,
+        "missing_frames": 0,
+        "duplicate_frames": 0,
+        "wrong_frames": 0,
+        "elapsed_seconds": 0.0,
+        "pass": true
+      },
+      {
+        "direction": "can0 -> can1",
+        "kind": "standard",
+        "bitrate": 1000000,
+        "target_frames": 10000,
+        "sent_frames": 10000,
+        "received_unique_frames": 10000,
+        "missing_frames": 0,
+        "duplicate_frames": 0,
+        "wrong_frames": 0,
+        "elapsed_seconds": 5.001,
+        "pass": true
+      },
+      {
+        "direction": "can1 -> can0",
+        "kind": "standard",
+        "bitrate": 1000000,
+        "target_frames": 10000,
+        "sent_frames": 10000,
+        "received_unique_frames": 10000,
+        "missing_frames": 0,
+        "duplicate_frames": 0,
+        "wrong_frames": 0,
+        "elapsed_seconds": 5.0,
+        "pass": true
+      },
+      {
+        "direction": "can0 -> can1",
+        "kind": "extended",
+        "bitrate": 1000000,
+        "target_frames": 2000,
+        "sent_frames": 2000,
+        "received_unique_frames": 2000,
+        "missing_frames": 0,
+        "duplicate_frames": 0,
+        "wrong_frames": 0,
+        "elapsed_seconds": 1.0,
+        "pass": true
+      },
+      {
+        "direction": "can1 -> can0",
+        "kind": "extended",
+        "bitrate": 1000000,
+        "target_frames": 2000,
+        "sent_frames": 2000,
+        "received_unique_frames": 2000,
+        "missing_frames": 0,
+        "duplicate_frames": 0,
+        "wrong_frames": 0,
+        "elapsed_seconds": 1.0,
+        "pass": true
+      }
+    ],
+    "rs485": [
+      {
+        "direction": "/dev/ttyS4 -> /dev/ttyS7",
+        "baud": 115200,
+        "format": "8N1",
+        "sent_bytes": 32,
+        "received_bytes": 32,
+        "expected_bytes": 32,
+        "bad_blocks": 0,
+        "sender_echo_bytes": 32,
+        "tx_sha256": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "rx_sha256": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "elapsed_seconds": 0.015,
+        "pass": true
+      },
+      {
+        "direction": "/dev/ttyS7 -> /dev/ttyS4",
+        "baud": 115200,
+        "format": "8N1",
+        "sent_bytes": 32,
+        "received_bytes": 32,
+        "expected_bytes": 32,
+        "bad_blocks": 0,
+        "sender_echo_bytes": 32,
+        "tx_sha256": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "rx_sha256": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "elapsed_seconds": 0.017,
+        "pass": true
+      },
+      {
+        "direction": "/dev/ttyS4 -> /dev/ttyS7",
+        "baud": 9600,
+        "format": "8N1",
+        "sent_bytes": 4096,
+        "received_bytes": 4096,
+        "expected_bytes": 4096,
+        "bad_blocks": 0,
+        "sender_echo_bytes": 4096,
+        "tx_sha256": "f26f699d558494b1fd2bb342fdeef37b39976dc40412d02cf8f7e43c2d3cb47c",
+        "rx_sha256": "f26f699d558494b1fd2bb342fdeef37b39976dc40412d02cf8f7e43c2d3cb47c",
+        "elapsed_seconds": 4.403,
+        "pass": true
+      },
+      {
+        "direction": "/dev/ttyS7 -> /dev/ttyS4",
+        "baud": 9600,
+        "format": "8N1",
+        "sent_bytes": 4096,
+        "received_bytes": 4096,
+        "expected_bytes": 4096,
+        "bad_blocks": 0,
+        "sender_echo_bytes": 4096,
+        "tx_sha256": "67198bec746ece95a68af74c8c0445ab1c3cf35122373876617e4115cc1fd919",
+        "rx_sha256": "67198bec746ece95a68af74c8c0445ab1c3cf35122373876617e4115cc1fd919",
+        "elapsed_seconds": 4.39,
+        "pass": true
+      },
+      {
+        "direction": "/dev/ttyS4 -> /dev/ttyS7",
+        "baud": 115200,
+        "format": "8N1",
+        "sent_bytes": 65536,
+        "received_bytes": 65536,
+        "expected_bytes": 65536,
+        "bad_blocks": 0,
+        "sender_echo_bytes": 65536,
+        "tx_sha256": "dd24b6e20ddd27eb8b2fc6a196008af604c36c4fee30f56a72eeda549e68d3e8",
+        "rx_sha256": "dd24b6e20ddd27eb8b2fc6a196008af604c36c4fee30f56a72eeda549e68d3e8",
+        "elapsed_seconds": 8.76,
+        "pass": true
+      },
+      {
+        "direction": "/dev/ttyS7 -> /dev/ttyS4",
+        "baud": 115200,
+        "format": "8N1",
+        "sent_bytes": 65536,
+        "received_bytes": 65536,
+        "expected_bytes": 65536,
+        "bad_blocks": 0,
+        "sender_echo_bytes": 65536,
+        "tx_sha256": "27da0a1ac6ed0ba33242a77a40c81a610d9c55f57c4f4047ef474e1cd1065733",
+        "rx_sha256": "27da0a1ac6ed0ba33242a77a40c81a610d9c55f57c4f4047ef474e1cd1065733",
+        "elapsed_seconds": 8.686,
+        "pass": true
+      }
+    ]
+  }
+}

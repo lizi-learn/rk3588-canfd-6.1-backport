@@ -1,0 +1,290 @@
+{
+  "device_alias": "lubancat-test",
+  "started_at": "2026-10-25T19:49:32.763018+08:00",
+  "ended_at": "2026-10-25T19:49:54.635194+08:00",
+  "source_sha256": "9659b0a742dde3fa408358915c0e67424d08703db839e6513ba94304c51d103f",
+  "pass": false,
+  "parameters": {
+    "configured_data_sample_point": "0.8",
+    "configured_data_sjw": "6",
+    "configured_nominal_sjw": "16"
+  },
+  "can": [
+    {
+      "direction": "can0 -> can1",
+      "nominal_bitrate": 1000000,
+      "data_bitrate": 5000000,
+      "BRS": true,
+      "FD": true,
+      "kind": "standard",
+      "payload_lengths": [
+        64
+      ],
+      "target_frames": 1,
+      "sent_frames": 1,
+      "received_unique_frames": 1,
+      "missing_frames": 0,
+      "duplicate_frames": 0,
+      "wrong_frames": 0,
+      "invalid_fd_or_echo_flags": 0,
+      "tx_sha256": "76a36798696c1ed834620958a063be6c820e2d8c9861e00a7284ffee6bdfe451",
+      "rx_sha256": "76a36798696c1ed834620958a063be6c820e2d8c9861e00a7284ffee6bdfe451",
+      "elapsed_seconds": 0.001,
+      "pass": true
+    },
+    {
+      "direction": "can1 -> can0",
+      "nominal_bitrate": 1000000,
+      "data_bitrate": 5000000,
+      "BRS": true,
+      "FD": true,
+      "kind": "standard",
+      "payload_lengths": [
+        64
+      ],
+      "target_frames": 1,
+      "sent_frames": 1,
+      "received_unique_frames": 1,
+      "missing_frames": 0,
+      "duplicate_frames": 0,
+      "wrong_frames": 0,
+      "invalid_fd_or_echo_flags": 0,
+      "tx_sha256": "6b02a34bfc097a4deb3a4847ee10c5833a0b03e2ca4efa1874d05421ec248f57",
+      "rx_sha256": "6b02a34bfc097a4deb3a4847ee10c5833a0b03e2ca4efa1874d05421ec248f57",
+      "elapsed_seconds": 0.001,
+      "pass": true
+    },
+    {
+      "direction": "can0 -> can1",
+      "nominal_bitrate": 1000000,
+      "data_bitrate": 5000000,
+      "BRS": true,
+      "FD": true,
+      "kind": "standard",
+      "payload_lengths": [
+        64
+      ],
+      "target_frames": 10000,
+      "sent_frames": 10000,
+      "received_unique_frames": 10000,
+      "missing_frames": 0,
+      "duplicate_frames": 0,
+      "wrong_frames": 0,
+      "invalid_fd_or_echo_flags": 0,
+      "tx_sha256": "e2403457f300c1e165fdc124a38d59a45a1f77422fa77291e1b03748a5986b80",
+      "rx_sha256": "e2403457f300c1e165fdc124a38d59a45a1f77422fa77291e1b03748a5986b80",
+      "elapsed_seconds": 5.0,
+      "pass": true
+    },
+    {
+      "direction": "can1 -> can0",
+      "nominal_bitrate": 1000000,
+      "data_bitrate": 5000000,
+      "BRS": true,
+      "FD": true,
+      "kind": "standard",
+      "payload_lengths": [
+        64
+      ],
+      "target_frames": 10000,
+      "sent_frames": 10000,
+      "received_unique_frames": 10000,
+      "missing_frames": 0,
+      "duplicate_frames": 0,
+      "wrong_frames": 0,
+      "invalid_fd_or_echo_flags": 0,
+      "tx_sha256": "ed0b1185564fd89e08b6fe750164add6420e8077b3c958dd6047bcec0f849ede",
+      "rx_sha256": "ed0b1185564fd89e08b6fe750164add6420e8077b3c958dd6047bcec0f849ede",
+      "elapsed_seconds": 5.0,
+      "pass": true
+    },
+    {
+      "direction": "can0 -> can1",
+      "nominal_bitrate": 1000000,
+      "data_bitrate": 5000000,
+      "BRS": true,
+      "FD": true,
+      "kind": "extended",
+      "payload_lengths": [
+        64
+      ],
+      "target_frames": 10000,
+      "sent_frames": 10000,
+      "received_unique_frames": 10000,
+      "missing_frames": 0,
+      "duplicate_frames": 0,
+      "wrong_frames": 0,
+      "invalid_fd_or_echo_flags": 0,
+      "tx_sha256": "3d1226328b123f690f51a3719d422a54138fe2253952eb71d4d5abceaa99fc9f",
+      "rx_sha256": "3d1226328b123f690f51a3719d422a54138fe2253952eb71d4d5abceaa99fc9f",
+      "elapsed_seconds": 5.0,
+      "pass": true
+    },
+    {
+      "direction": "can1 -> can0",
+      "nominal_bitrate": 1000000,
+      "data_bitrate": 5000000,
+      "BRS": true,
+      "FD": true,
+      "kind": "extended",
+      "payload_lengths": [
+        64
+      ],
+      "target_frames": 10000,
+      "sent_frames": 10000,
+      "received_unique_frames": 10000,
+      "missing_frames": 0,
+      "duplicate_frames": 0,
+      "wrong_frames": 0,
+      "invalid_fd_or_echo_flags": 0,
+      "tx_sha256": "20ee9e70d57c5ee32c4a2a662120714c79ac7a13a6148dab2a9a797a08a9fc11",
+      "rx_sha256": "20ee9e70d57c5ee32c4a2a662120714c79ac7a13a6148dab2a9a797a08a9fc11",
+      "elapsed_seconds": 5.0,
+      "pass": true
+    },
+    {
+      "direction": "can0 -> can1",
+      "nominal_bitrate": 1000000,
+      "data_bitrate": 5000000,
+      "BRS": true,
+      "FD": true,
+      "kind": "standard",
+      "payload_lengths": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        12,
+        16,
+        20,
+        24,
+        32,
+        48,
+        64
+      ],
+      "target_frames": 1600,
+      "sent_frames": 1600,
+      "received_unique_frames": 1600,
+      "missing_frames": 0,
+      "duplicate_frames": 0,
+      "wrong_frames": 0,
+      "invalid_fd_or_echo_flags": 0,
+      "tx_sha256": "ca770f726eb2d9abbfb0ab5495344d4e5860d93acb538dbd086dc921176f101a",
+      "rx_sha256": "ca770f726eb2d9abbfb0ab5495344d4e5860d93acb538dbd086dc921176f101a",
+      "elapsed_seconds": 0.8,
+      "pass": true
+    },
+    {
+      "direction": "can1 -> can0",
+      "nominal_bitrate": 1000000,
+      "data_bitrate": 5000000,
+      "BRS": true,
+      "FD": true,
+      "kind": "standard",
+      "payload_lengths": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        12,
+        16,
+        20,
+        24,
+        32,
+        48,
+        64
+      ],
+      "target_frames": 1600,
+      "sent_frames": 1600,
+      "received_unique_frames": 1600,
+      "missing_frames": 0,
+      "duplicate_frames": 0,
+      "wrong_frames": 0,
+      "invalid_fd_or_echo_flags": 0,
+      "tx_sha256": "ee56a4bd52beb7da78e919f6e9f9b26fb96adf2342475ca18f6528ed64070f0f",
+      "rx_sha256": "ee56a4bd52beb7da78e919f6e9f9b26fb96adf2342475ca18f6528ed64070f0f",
+      "elapsed_seconds": 0.8,
+      "pass": true
+    }
+  ],
+  "error_delta": {
+    "can0": {
+      "restarts": 0,
+      "bus_error": 36,
+      "arbitration_lost": 0,
+      "error_warning": 0,
+      "error_passive": 0,
+      "bus_off": 0
+    },
+    "can1": {
+      "restarts": 0,
+      "bus_error": 39,
+      "arbitration_lost": 0,
+      "error_warning": 0,
+      "error_passive": 0,
+      "bus_off": 0
+    }
+  },
+  "timing": {
+    "can0": {
+      "ctrlmode": [
+        "BERR-REPORTING",
+        "FD"
+      ],
+      "berr_counter": {
+        "tx": 0,
+        "rx": 0
+      },
+      "bittiming": {
+        "bitrate": 1000000,
+        "sample_point": 0.8,
+        "tq": 6,
+        "prop_seg": 59,
+        "phase_seg1": 60,
+        "phase_seg2": 30,
+        "sjw": 16
+      },
+      "data_bittiming": {
+        "bitrate": 5000000,
+        "sample_point": 0.8,
+        "tq": 6,
+        "prop_seg": 11,
+        "phase_seg1": 12,
+        "phase_seg2": 6,
+        "sjw": 6
+      },
+      "clock": 300000000
+    },
+    "can1": {
+      "ctrlmode": [
+        "BERR-REPORTING",
+        "FD"
+      ],
+      "berr_counter": {
+        "tx": 0,
+        "rx": 0
+      },
+      "bittiming": {
+        "bitrate": 1000000,
+        "sample_point": 0.8,
+        "tq": 6,
+        "prop_seg": 59,
+        "phase_seg1": 60,
+        "phase_seg2": 30,
+        "sjw": 16
+      },
+      "data_bittiming": {
+        "bitrate": 5000000,
+        "sample_point": 0.8,
+        "tq": 6,
+        "prop_seg": 11,
+        "phase_seg1": 12,
+        "phase_seg2": 6,
+        "sjw": 6
+      },
+      "clock": 300000000
+    }
+  }
+}

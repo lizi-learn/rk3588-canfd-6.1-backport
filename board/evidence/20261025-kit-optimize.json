@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-25T20:44:39.831137+08:00",
+  "profile": {
+    "profile": "lbm5-diban-v01a",
+    "can_mode": "classic",
+    "rs485_2": "on",
+    "desktop": "GNOME X11 autologin, 1080p headless, no idle suspend",
+    "audio_forwarding": "disabled",
+    "remote": "retain installed versions and credentials; install missing approved packages",
+    "reboot": "manual, after successful configuration",
+    "validation": "separate verify.sh; no bus frames sent by optimize.sh"
+  },
+  "changed_files": [],
+  "overlay_merge": "pass",
+  "reboot_required": true,
+  "verification": "not run by optimizer",
+  "source_sha256": "4ec236088aa9a78f60877add7530d9c6259001ec5d4cc2dc07d1cb65d95e1a9b",
+  "note": "Second identical optimization changed zero file contents; backup dry-run validated hashes for 19 files; full restoration not executed."
+}

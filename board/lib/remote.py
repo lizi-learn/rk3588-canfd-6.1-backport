@@ -19,7 +19,7 @@ def install_remote(local_dir=None):
    run('curl','--fail','--location','--proto','=https','--proto-redir','=https','--retry','2','--connect-timeout','15','--max-time','240','--output',str(path)+'.part',entry['url'],timeout=260)
    os.replace(str(path)+'.part',path)
   require(sha(path)==entry['sha256'],'Package checksum mismatch: '+package)
-  fields=run('dpkg-deb','-f',path,'Package','Architecture','Version')
-  require('arm64' in fields and entry['version'] in fields,'Package architecture/version mismatch: '+package)
+  for field,value in [('Package',package),('Architecture','arm64'),('Version',entry['version'])]:
+   require(run('dpkg-deb','-f',path,field).strip()==value,'Package '+field+' mismatch: '+package)
   run('apt-get','install','-y',path,timeout=300);result[package]='installed '+entry['version']
  return result

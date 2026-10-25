@@ -1,10 +1,12 @@
-# LBM5-DIBAN-V01A 操作说明（v0.2.0）
+# LBM5-DIBAN-V01A 操作说明（增量优化入口）
+
+> v0.3 从新机接手、账户/主机名、密码、logo、录音机及浏览器修复，请先看 [FIRST_BOOT.md](FIRST_BOOT.md)。本页说明保留的 optimize 增量入口与接线。
 
 ## 适用条件
 
 实机为 RK3588 + LBM5-DIBAN-V01A 自研底板，Ubuntu 22.04.5 ARM64，LubanCat-5IOB BSP、Linux 6.1.172（2026-10-17 构建）。两路 MAX13488 已焊接，UART4M2 / UART7M2 对应 RS48_1 / RS48_2。仅适用于无实体显示器的远程桌面用途。
 
-这是该 BSP 的增量配置工具，不是刷机镜像或通用 RK3588 安装器。要求镜像已含 GNOME/GDM 和 `/opt/mesa-26.2.3` GPU 组件，且能进入一次 GNOME 会话。仅相同内核版本号不足以证明二进制 ABI 相同；CAN 模块在目标机使用配套厂商头文件现场编译，modpost/编译失败必须停止。
+这是该 BSP 的增量配置工具，不是刷机镜像或通用 RK3588 安装器。要求镜像已含 GNOME/GDM 和 `/opt/mesa-26.2.3` GPU 组件，可在线或在离线用户 DConf 中初始化偏好。仅相同内核版本号不足以证明二进制 ABI 相同；CAN 模块在目标机使用配套厂商头文件现场编译，modpost/编译失败必须停止。
 
 NoMachine 9.2.18 服务端已预装的设备保留原版本。缺少服务端时，先从厂商取得适用许可的 ARM64 **服务端**安装包，执行优化时增加 `--nomachine-deb /绝对路径/安装包.deb`；免费客户端包不能替代服务端。本项目不托管或绕过商业许可。历史 9.2 下载链接已失效，不承诺自动取得旧包。
 
@@ -17,7 +19,7 @@ ToDesk 已安装则保留版本、设备 ID 和密码。缺少时下载锁定 SH
 3. 下载本仓库的固定版本并核对来源。以下命令均在目标板仓库根目录执行：
 
 ```sh
-git clone --branch v0.2.0 https://github.com/lizi-learn/rk3588-canfd-6.1-backport.git
+git clone --branch v0.3.0 https://github.com/lizi-learn/rk3588-canfd-6.1-backport.git
 cd rk3588-canfd-6.1-backport
 python3 scripts/check_source.py
 sudo ./board/optimize.sh --carrier lbm5-diban-v01a --dry-run
@@ -30,7 +32,7 @@ sudo ./board/optimize.sh --carrier lbm5-diban-v01a
 sudo reboot
 ```
 
-两路 RS485 默认 115200/8N1，自动方向。未焊接备用 RS48_2 的旧板需加 `--rs485-2 off`。非 cat 用户加 `--user 用户名`，验证时同样指定。优化会中断后续业务，先停止接口业务程序。脚本不主动发送总线帧，不自动重启，不把“写完配置”当作验收通过。
+两路 RS485 默认 115200/8N1，自动方向。未焊接备用 RS48_2 的旧板需加 `--rs485-2 off`。默认从调用者/ymbot/UID1000 自动识别；需要覆盖时加 `--user 用户名`。优化会中断后续业务，先停止接口业务程序。脚本不主动发送总线帧，不自动重启，不把“写完配置”当作验收通过。
 
 配置涉及：活动 U-Boot 板型文件；CAN/UART pinmux；开机接口服务；1080p 内置 EDID、关闭空置 HDMI1；GNOME X11 自动登录；已有 Mesa/Panfrost 路径；Chromium 会话后端；禁空闲休眠/锁屏；保留联网的同时移除无远程文件系统时的 network-online 启动等待；关闭 Wi-Fi 省电；启用远程桌面服务，禁用 NoMachine 音频转发。
 

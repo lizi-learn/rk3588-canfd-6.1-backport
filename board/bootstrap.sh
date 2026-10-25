@@ -2,9 +2,9 @@
 # SPDX-License-Identifier: GPL-2.0-only
 # Version-pinned launcher. Optimization and validation remain separate actions.
 set -euo pipefail
-version=v0.2.0
+version=v0.3.0
 action=${1:-}
-case "$action" in optimize|verify|rollback|wifi) shift;; *) echo "Usage: bash bootstrap.sh {optimize|verify|rollback|wifi} [arguments]" >&2; exit 2;; esac
+case "$action" in setup|optimize|verify|rollback|wifi|repair-browser|todesk-password) shift;; *) echo "Usage: bash bootstrap.sh {setup|optimize|verify|rollback|wifi|repair-browser|todesk-password} [arguments]" >&2; exit 2;; esac
 cache_dir=${XDG_CACHE_HOME:-$HOME/.cache}/rk3588-board-kit/$version
 if [ ! -d "$cache_dir" ]; then
   release_url=https://github.com/lizi-learn/rk3588-canfd-6.1-backport/releases/download/$version

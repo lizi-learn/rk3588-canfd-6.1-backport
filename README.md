@@ -2,61 +2,42 @@
 
 RK3588 / Linux 6.1.172 的实验性 CAN FD 驱动回移，以及 LBM5-DIBAN-V01A 自研底板的配置与独立验证工具。驱动主体来自 Linux 上游，本项目完成 6.1 API 兼容、板级适配、位时序调优及实机验证，保留原作者版权与 GPL-2.0-only 许可。
 
-**v0.2.0：发布优化与独立验证工具，并保留真实通过和失败记录。5M FD 重启复测出现新增总线错误，稳定性未通过；不能称 5M 已优化完成。** 这是当前接线条件下的有限台架实测，不代表长线极限或生产认证。默认持久化配置为普通 CAN 1M。
+**v0.3.0：增加从接手同款 BSP 新机开始的配置入口、ymbot 账户/主机名、大脑 logo、录音机、隐藏密码设置和 Chromium 改名锁修复。优化与验证继续分开。CAN FD 5M 稳定性仍未通过，不显示默认硬件绿灯。**
 
 | 实测项目（2026-10-25） | 结果 |
 | --- | --- |
-| 普通 CAN 1M | 历史 24,002 帧零错误；原厂复测丢失/重复各1，专用驱动复测数据完整但发现19次、最终26次勘误6恢复，零错误验收未完成 |
-| FD+BRS 1M/5M | 历史单次 43,202 帧零错误；发布复测同样全部收到但新增总线错误 49/45，稳定性不通过 |
-| RS485 UART4 / UART7 | 9600 / 115200 双向字节核对、200 次半双工换向通过 |
-| 启动 systemd 指标 | 基线 60.614s；优化后 6.627s，后续7.151s，发布最终6.598s；Wi-Fi 就绪约日志时间轴 23–24s |
+| 普通 CAN 1M | 数据完整的多次记录之外，仍有原厂丢失/重复、回移驱动勘误6恢复失败记录，未完成零错误验收 |
+| FD+BRS 1M/5M，30分钟 | 12,386,944 帧全部收到；标准64字节帧两个方向各600秒零错误，扩展/混合负载累计每口 bus_error +6、一个 RX FIFO 异常，严格失败 |
+| RS485 UART4 / UART7 | 1.5M baud 连续双向20MiB+1000次换向通过；2M及以上持续测试丢字节；默认115200 |
+| 启动 systemd 指标 | 基线60.614s，优化后多次6.6–7.2s，改名重启6.786s；Wi-Fi约23–24s，不等同上电到远程可用 |
 | 无屏桌面 / GPU | GNOME X11、1080p、Mali-G610 Panfrost accelerated=yes |
-| 远程桌面 | NoMachine 9.2 服务认证与桌面流记录；ToDesk 4.8.5.1 服务/固定密码配置存在，对端完整交互未验收 |
+| 账户 / 桌面 / 应用 | ymbot 登录和主机名、官网大脑logo、GNOME录音机；Chromium旧主机名锁已修复并确认网页加载 |
+| 远程桌面 | NoMachine/ToDesk 服务、固定密码配置；配置读回不等于对端完整交互验收 |
 
-公开的脱敏实测摘要、失败参数和复测记录见 [board/evidence](board/evidence/)。原始日志保存在本地，摘要包含原始文件 SHA256，便于核对。仓库不会默认显示“硬件已绿灯”；CI 只验证离线源码与构建，不连接设备。
+证据见 [board/evidence](board/evidence/)。CI 只做离线检查，不连接设备，不改变硬件验收结论。
 
-## 两个独立入口
+## 新机一键配置，独立验证
 
-先阅读 [适用条件、接线和回退说明](docs/BOARD_KIT.md)。适用镜像须已含 GNOME/GDM、Mesa 26.2.3，以及现有 NoMachine 服务端或自行取得的适用许可安装包。ToDesk 缺失时使用锁定哈希的社区镜像包，来源在清单中明示。
+先看 [从接手到交付操作单](docs/FIRST_BOOT.md)。固定适用：LBM5-DIBAN-V01A、LubanCat-5IO(B) BSP、Ubuntu22.04 ARM64、Linux6.1.172。接手的实机镜像已含 Mesa26.2.3、匹配头文件和 NoMachine；缺少时需提供厂商/镜像组件及哈希，脚本不猜测下载链接。缺 GNOME 时支持安装，但全新刷机重装分支尚未实机验收。
 
 ```sh
-git clone --branch v0.2.0 https://github.com/lizi-learn/rk3588-canfd-6.1-backport.git
-cd rk3588-canfd-6.1-backport
-python3 scripts/check_source.py
-
-# 优化：默认普通 CAN 1M、两路 485 115200、无屏桌面与启动配置
-sudo ./board/optimize.sh --carrier lbm5-diban-v01a
-sudo reboot
+curl -fsSL https://raw.githubusercontent.com/lizi-learn/rk3588-canfd-6.1-backport/v0.3.0/board/bootstrap.sh -o /tmp/rk3588-kit.sh
+# 一键配置；按提示隐藏输入系统和 ToDesk 新密码；完成后重启
+bash /tmp/rk3588-kit.sh setup --carrier lbm5-diban-v01a --reboot
 ```
 
-重连后，在同一目录独立执行：
+改名时 SSH 会断开，root 服务继续运行。重连 `ssh ymbot@实际IP` 后独立验证：
 
 ```sh
 # 健康检查，不发总线数据
-sudo ./board/verify.sh
-# 已按说明正确对插并停止业务后，验证实际收发
-sudo ./board/verify.sh --physical
-```
-
-仅研究复现 5M FD（当前稳定性未通过）时选择实验参数并重启，验证仍用同一个独立入口：
-
-```sh
-sudo ./board/optimize.sh --carrier lbm5-diban-v01a --can-mode fd5m
-sudo reboot
-# 重连并进入仓库目录
-sudo ./board/verify.sh --physical
-```
-
-`--dry-run` 只查看优化计划；`--rs485-2 off` 用于第二路未焊接的旧板。工具不自动重启、不重置远程密码。配置备份支持 `board/rollback.sh`。详细 PDF 见 [发布附件](https://github.com/lizi-learn/rk3588-canfd-6.1-backport/releases/tag/v0.2.0) 与 `docs/pdf/`。
-
-也可使用固定版本启动器（优化、验证依旧两条命令；下载包校验 SHA256）：
-
-```sh
-curl -fsSL https://raw.githubusercontent.com/lizi-learn/rk3588-canfd-6.1-backport/v0.2.0/board/bootstrap.sh -o /tmp/rk3588-kit.sh
-bash /tmp/rk3588-kit.sh optimize --carrier lbm5-diban-v01a
-# 手动重启并重连后
+bash /tmp/rk3588-kit.sh verify
+# 停止业务并正确对插以后，实际验证 CAN/485
 bash /tmp/rk3588-kit.sh verify --physical
 ```
+
+已有设备保留密码重复配置：`setup --carrier lbm5-diban-v01a --keep-password`。初始账户默认自动识别，也可 `--source-user cat`；第二路485未焊接用 `--rs485-2 off`。公开脚本不含统一默认密码、Wi-Fi凭据或设备远控身份。
+
+Git clone 用户执行 `sudo ./board/setup.sh --carrier lbm5-diban-v01a`；增量优化仍用 `board/optimize.sh`，验证仍用 `board/verify.sh`。`--dry-run` 只预检，优化和配置不发送总线帧。回退与缺少组件时的参数见 [操作单](docs/FIRST_BOOT.md) 和 [接线/增量说明](docs/BOARD_KIT.md)。`docs/pdf/` 保留 v0.2 历史报告，当前入口以 v0.3 操作单为准。
 
 ## 5M 的关键结果
 

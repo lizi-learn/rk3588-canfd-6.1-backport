@@ -3,15 +3,16 @@
 """Configure the tested carrier. Does not send bus traffic or reboot."""
 import argparse,fcntl,json,os,platform,pwd,re,shutil,sys,tempfile
 from pathlib import Path
-from lib.common import BOARD,ROOT,STATE,now,profile,require,require_root,run,save_json
+from lib.common import desktop_user,BOARD,ROOT,STATE,now,profile,require,require_root,run,save_json
 from lib.profile import boot_config,section,FD_OVERLAY
 from lib.snapshot import Snapshot
 from lib.remote import installed,install_remote
+from lib.provision import session_command
 
 def main():
  p=argparse.ArgumentParser(description=__doc__)
  p.add_argument('--carrier',required=True,choices=['lbm5-diban-v01a'])
- p.add_argument('--user',default='cat');p.add_argument('--can-mode',choices=['classic','fd5m'],default='classic')
+ p.add_argument('--user',default=desktop_user());p.add_argument('--can-mode',choices=['classic','fd5m'],default='classic')
  p.add_argument('--rs485-2',choices=['on','off'],default='on');p.add_argument('--dry-run',action='store_true')
  p.add_argument('--nomachine-deb',type=Path,help='Locally obtained, licensed NoMachine ARM64 server installer if not already installed.')
  p.add_argument('--remote-package-dir',type=Path,help='Optional local directory containing the pinned ToDesk installer.')
@@ -65,6 +66,11 @@ def main():
   snap.write('/etc/systemd/system/lbm5-can.service',f'[Unit]\nDescription=LBM5 CAN and AutoDirection RS485 configuration\nRequires={devices}\nAfter={devices}\n\n[Service]\nType=oneshot\nEnvironmentFile=/etc/default/lbm5-interfaces\nExecStart=/usr/local/sbin/lbm5-interfaces start\nExecStop=/usr/local/sbin/lbm5-interfaces stop\nRemainAfterExit=yes\nTimeoutStartSec=15\n\n[Install]\nWantedBy=multi-user.target\n')
   gdm=Path('/etc/gdm3/custom.conf');snap.write(gdm,section(gdm.read_text(),'daemon',{'WaylandEnable':'false','AutomaticLoginEnable':'true','AutomaticLogin':a.user,'DefaultSession':'ubuntu-xorg.desktop'}))
   account=Path('/var/lib/AccountsService/users')/a.user;snap.write(account,section(account.read_text() if account.exists() else '', 'User',{'Session':'ubuntu-xorg','XSession':'ubuntu-xorg'}),0o600)
+  gdm_unit=Path(run('systemctl','show','-p','FragmentPath','--value','gdm3.service').strip());require(gdm_unit.is_file(),'GDM systemd unit is missing.')
+  snap.write('/etc/X11/default-display-manager','/usr/sbin/gdm3\n')
+  snap.link('/etc/systemd/system/display-manager.service',gdm_unit)
+  graphical=Path('/lib/systemd/system/graphical.target');require(graphical.is_file(),'graphical.target is missing.')
+  snap.link('/etc/systemd/system/default.target',graphical)
   dmrc=Path(u.pw_dir)/'.dmrc';snap.write(dmrc,'[Desktop]\nSession=ubuntu-xorg\n');os.chown(dmrc,u.pw_uid,u.pw_gid)
   asset('20-modesetting.conf','/etc/X11/xorg.conf.d/20-modesetting.conf')
   asset('zz-session-platform','/etc/chromium.d/zz-session-platform')
@@ -84,16 +90,14 @@ def main():
   snap.write(node,text,node.stat().st_mode&0o777)
   cfg=Path('/opt/todesk/config/config.ini')
   if cfg.exists():snap.remember(cfg);os.chown(cfg,0,u.pw_gid);cfg.chmod(0o660)
-  autostart=Path(u.pw_dir)/'.config/autostart/todesk.desktop';snap.write(autostart,'[Desktop Entry]\nType=Application\nName=ToDesk\nExec=/opt/todesk/bin/ToDesk\nX-GNOME-Autostart-enabled=true\n');os.chown(autostart,u.pw_uid,u.pw_gid)
+  autostart=Path(u.pw_dir)/'.config/autostart/todesk.desktop';snap.write(autostart,'[Desktop Entry]\nType=Application\nName=ToDesk\nExec=/opt/todesk/bin/ToDesk\nX-GNOME-Autostart-enabled=true\n');os.chown(autostart,u.pw_uid,u.pw_gid);os.chown(autostart.parent,u.pw_uid,u.pw_gid);os.chown(autostart.parent.parent,u.pw_uid,u.pw_gid)
   run('usermod','-aG','dialout',a.user)
   # Apply desktop preferences through the existing session; no partial DISPLAY-only environment.
   prefs={'org.gnome.desktop.session/idle-delay':'uint32 0','org.gnome.desktop.screensaver/lock-enabled':'false','org.gnome.settings-daemon.plugins.power/sleep-inactive-ac-type':"'nothing'",'org.gnome.settings-daemon.plugins.power/sleep-inactive-battery-type':"'nothing'"}
   session=BOARD/'assets/session-run.py'
-  if run('pgrep','-u',a.user,'-x','gnome-shell',check=False).returncode==0:
-   for key,value in prefs.items():
-    schema,name=key.split('/',1);old=run('python3',session,'--user',a.user,'gsettings','get',schema,name).strip();snap.data['gsettings'][key]=old;snap.flush()
-    run('python3',session,'--user',a.user,'gsettings','set',schema,name,value)
-  else:raise RuntimeError('No active GNOME session: log in once before running the desktop profile.')
+  for key,value in prefs.items():
+   schema,name=key.split('/',1);old=session_command(a.user,'gsettings','get',schema,name).strip();snap.data['gsettings'][key]=old;snap.flush()
+   session_command(a.user,'gsettings','set',schema,name,value)
   # Only remove the local network-online boot wait when no remote filesystem depends on it.
   fstab=Path('/etc/fstab').read_text()
   remote_mount=any(re.search(r'\b(nfs|nfs4|cifs)\b|_netdev',l) for l in fstab.splitlines() if l.strip() and not l.lstrip().startswith('#'))

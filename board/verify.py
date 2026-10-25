@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 # SPDX-License-Identifier: GPL-2.0-only
 """Independent verification. --physical sends traffic on an isolated, cross-wired bench."""
-import argparse,configparser,fcntl,json,os,platform,re,sys,termios,time
+import argparse,configparser,fcntl,json,os,platform,pwd,re,sys,termios,time
 from pathlib import Path
-from lib.common import BOARD,STATE,configuration,now,profile,require,require_root,run,save_json,sha
+from lib.common import desktop_user,BOARD,STATE,configuration,now,profile,require,require_root,run,save_json,sha
 PORTS={'can0':'fea60000.can','can1':'fea70000.can'}
 
 def ethtool_stats(n):return {k:int(v) for k,v in re.findall(r'^\s+(\w+): (\d+)$',run('ethtool','-S',n),re.M)}
@@ -94,10 +94,10 @@ def physical(before,is_fd,rs485_on,r):
 
 def main():
  p=argparse.ArgumentParser(description=__doc__);p.add_argument('--physical',action='store_true',help='Send CAN and RS485 data on a correctly cross-wired, isolated bench; stop business applications first.')
- p.add_argument('--user',default='cat');p.add_argument('--output',type=Path);a=p.parse_args();require_root()
+ p.add_argument('--user',default=desktop_user());p.add_argument('--output',type=Path);a=p.parse_args();require_root()
  lock=open('/run/lbm5-interface-test.lock','w');fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
  out=a.output or STATE/('verification-'+now().replace(':','')+'.json')
- r={'started_at':now(),'kit_version':'0.2.0','scope':'health + physical cross-port tests' if a.physical else 'read-only health checks','hardware':{},'checks':{},'physical':'not requested','remote_peer_interaction':'not tested by this script','power_on_stopwatch':'not measured','pass':False}
+ r={'started_at':now(),'kit_version':'0.3.0','scope':'health + physical cross-port tests' if a.physical else 'read-only health checks','hardware':{},'checks':{},'physical':'not requested','remote_peer_interaction':'not tested by this script','power_on_stopwatch':'not measured','pass':False}
  def check(name,ok,detail):r['checks'][name]={'pass':bool(ok),'detail':detail}
  try:
   device=profile();r['hardware']={'model':device['model'],'kernel_release':platform.release(),'kernel_build':platform.version(),'architecture':platform.machine()}
@@ -118,6 +118,19 @@ def main():
   display=run('python3',session,'--user',a.user,'xrandr','--current');check('headless 1080p', '1920x1080' in display and bool(re.search(r'current 1920\s*x\s*1080',display.splitlines()[0])), '\n'.join(x for x in display.splitlines() if '1920x1080' in x or ' connected' in x))
   nx=Path('/usr/NX/etc/node.cfg').read_text();check('NoMachine audio disabled',any(l.strip()=='EnableAudio 0' for l in nx.splitlines()) and any(l.strip()=='AudioInterface disabled' for l in nx.splitlines()),'EnableAudio=0, AudioInterface=disabled')
   c=configparser.ConfigParser(interpolation=None);c.read('/opt/todesk/config/config.ini');fixed=bool(c.get('configinfo','authpassex',fallback=''));check('ToDesk fixed password present',fixed,'Encrypted credential present; password authentication by a peer is outside this check.')
+  logo=Path('/usr/share/backgrounds/ymbot/brain-logo.png')
+  if logo.exists():
+   u=pwd.getpwnam(a.user)
+   setup_plan=STATE/'latest-setup/plan.json'
+   expected=json.loads(setup_plan.read_text()) if setup_plan.exists() else {'target_user':'ymbot','hostname':'ymbot'}
+   check('branded desktop account',u.pw_uid==1000 and a.user==expected['target_user'] and run('hostname').strip()==expected['hostname'],{'user':a.user,'uid':u.pw_uid,'hostname':run('hostname').strip()})
+   check('official brain logo',sha(logo)=='c3fb34bb5b182375cbb30c5d9e2cc16808203e5b5b22a0781b7e1fbbaba635b6','Official source bytes; centered on black background.')
+   for package in ['chromium','gnome-sound-recorder']:
+    version=run('dpkg-query','-W','-f=${db:Status-Status}',package,check=False)
+    check(package+' installed',version.returncode==0 and version.stdout=='installed','Package installation only; no microphone capture or GUI action in read-only health check.')
+   singleton=Path(u.pw_dir)/'.config/chromium/SingletonLock'
+   host=os.readlink(singleton).rpartition('-')[0] if singleton.is_symlink() else None
+   check('Chromium profile host lock',host in (None,run('hostname').strip()),'No foreign-host singleton lock; does not establish webpage rendering.')
   if a.physical:
    print('Physical testing: CAN normal mode, no socket echo; UART baud rates restored after testing.',flush=True)
    # Save every completed subtest immediately, including when a later case fails.

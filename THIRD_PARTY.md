@@ -32,3 +32,9 @@ are provided directly under `driver/` and are needed alongside the patch.
 New engineering material (root Makefile, public documentation, provenance checks, board overlay and test utility) is distributed under GPL-2.0-only.
 The source release contains no precompiled module; the recorded module hash identifies the binary that was actually field-tested.
 No claim of upstream acceptance, official vendor support or physical CAN-FD certification is made.
+
+## Optional desktop branding and vendor inputs (board kit v0.3)
+
+The YMBOT brain logo is downloaded, not bundled or relicensed by this repository. Source: https://www.ymbot.com/static/png/logo-CM8nhUEK.png ; SHA256 `c3fb34bb5b182375cbb30c5d9e2cc16808203e5b5b22a0781b7e1fbbaba635b6`. Trademark/artwork rights remain with their owner.
+
+NoMachine, Mesa BSP bundles, matching vendor headers and native browser installers are not redistributed here. Supply the matching components and their source/license obligations as described in `docs/FIRST_BOOT.md`. ToDesk installer provenance/hash is in `board/assets/remote-packages.json`. The optional ToDesk password writer is a version-specific local configuration implementation tested with 4.8.5.1; it is not an official vendor API or a password-recovery tool and never decrypts pre-existing credentials.

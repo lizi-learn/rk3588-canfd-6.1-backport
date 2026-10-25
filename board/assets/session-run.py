@@ -3,7 +3,7 @@
 """Launch a command using the real GNOME session environment; never log it."""
 import argparse,os,pwd,subprocess
 from pathlib import Path
-p=argparse.ArgumentParser();p.add_argument('--user',default='cat');p.add_argument('command',nargs=argparse.REMAINDER);a=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('--user',default=pwd.getpwuid(1000).pw_name);p.add_argument('command',nargs=argparse.REMAINDER);a=p.parse_args()
 if os.geteuid()!=0:raise SystemExit('Run as root to read the session environment.')
 pwd.getpwnam(a.user)
 pids=subprocess.check_output(['pgrep','-u',a.user,'-x','gnome-shell'],text=True).split()

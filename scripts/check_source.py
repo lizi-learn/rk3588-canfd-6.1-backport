@@ -40,3 +40,11 @@ failed=json.loads((root/'board/evidence/20261025-fd5m-brp10-repeat-failed.json')
 if failed['pass'] or failed['error_delta']['can0']['bus_error']!=49 or failed['error_delta']['can1']['bus_error']!=45:
     raise SystemExit('CAN FD repetition failure must not be lost.')
 print('Board evidence preserved: health/RS485 pass, CAN zero-error acceptance remains failed.')
+
+endurance=json.loads((root/'board/evidence/20261025-fd5m-30min.json').read_text())
+if endurance['strict_pass'] or endurance['totals_excluding_intentionally_bad_negative_control']['unique']!=12386944:
+    raise SystemExit('30 minute FD strict failure must be preserved.')
+rate=json.loads((root/'board/evidence/20261025-rs485-rate.json').read_text())
+if rate['最高持续验证通过波特率']!=1500000 or not rate['最高档位验证']['所有逐字节与SHA256比较一致']:
+    raise SystemExit('Unexpected sustained RS485 rate claim.')
+print('Latest rate/endurance evidence retained; no production acceptance claim.')

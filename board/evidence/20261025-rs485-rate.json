@@ -1,0 +1,513 @@
+{
+  "结论": "本次已测档位中，当前BSP连续大流量验证通过的最高档位为1500000 baud；不表示整板物理极限。",
+  "格式": "两路RS485，8N1，半双工，物理对插；UART4/ttyS4 <-> UART7/ttyS7",
+  "最高持续验证通过波特率": 1500000,
+  "测试开始": "2026-10-25T21:31:05.521254+08:00",
+  "测试结束": "2026-10-25T21:34:00.679387+08:00",
+  "最高档位验证": {
+    "每方向每轮字节": 1048576,
+    "轮数": 10,
+    "每方向累计字节": 10485760,
+    "双向合计字节": 20971520,
+    "双向合计MiB": 20,
+    "所有逐字节与SHA256比较一致": true,
+    "UART错误增量": {
+      "/dev/ttyS4": {
+        "frame": 0,
+        "overrun": 0,
+        "parity": 0,
+        "break": 0,
+        "buf_overrun": 0
+      },
+      "/dev/ttyS7": {
+        "frame": 0,
+        "overrun": 0,
+        "parity": 0,
+        "break": 0,
+        "buf_overrun": 0
+      }
+    },
+    "换向测试": {
+      "requested_turns": 1000,
+      "completed_turns": 1000,
+      "received_bytes": 237000,
+      "pass": true,
+      "failure": null,
+      "inter_transaction_idle_ms": 2
+    },
+    "故意不匹配波特率负控有效": true,
+    "UART时钟": {
+      "clk_uart4_src": 1188000000,
+      "clk_uart4_frac": 24000000,
+      "clk_uart4": 24000000,
+      "sclk_uart4": 24000000,
+      "clk_uart7_src": 1188000000,
+      "clk_uart7_frac": 24000000,
+      "clk_uart7": 24000000,
+      "sclk_uart7": 24000000
+    },
+    "TCGETS2读回": {
+      "/dev/ttyS4": {
+        "ispeed": 1500000,
+        "ospeed": 1500000,
+        "cflag": "0x1cba",
+        "pyserial_rate": 1500000
+      },
+      "/dev/ttyS7": {
+        "ispeed": 1500000,
+        "ospeed": 1500000,
+        "cflag": "0x1cba",
+        "pyserial_rate": 1500000
+      }
+    },
+    "实测应用有效载荷_kBps_均值": 132.552
+  },
+  "逐档短测": [
+    {
+      "波特率": 115200,
+      "通过": true,
+      "错误增量": {
+        "/dev/ttyS4": {
+          "frame": 0,
+          "overrun": 0,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        },
+        "/dev/ttyS7": {
+          "frame": 0,
+          "overrun": 0,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        }
+      }
+    },
+    {
+      "波特率": 230400,
+      "通过": true,
+      "错误增量": {
+        "/dev/ttyS4": {
+          "frame": 0,
+          "overrun": 0,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        },
+        "/dev/ttyS7": {
+          "frame": 0,
+          "overrun": 0,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        }
+      }
+    },
+    {
+      "波特率": 460800,
+      "通过": true,
+      "错误增量": {
+        "/dev/ttyS4": {
+          "frame": 0,
+          "overrun": 0,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        },
+        "/dev/ttyS7": {
+          "frame": 0,
+          "overrun": 0,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        }
+      }
+    },
+    {
+      "波特率": 500000,
+      "通过": true,
+      "错误增量": {
+        "/dev/ttyS4": {
+          "frame": 0,
+          "overrun": 0,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        },
+        "/dev/ttyS7": {
+          "frame": 0,
+          "overrun": 0,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        }
+      }
+    },
+    {
+      "波特率": 921600,
+      "通过": true,
+      "错误增量": {
+        "/dev/ttyS4": {
+          "frame": 0,
+          "overrun": 0,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        },
+        "/dev/ttyS7": {
+          "frame": 0,
+          "overrun": 0,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        }
+      }
+    },
+    {
+      "波特率": 1000000,
+      "通过": true,
+      "错误增量": {
+        "/dev/ttyS4": {
+          "frame": 0,
+          "overrun": 0,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        },
+        "/dev/ttyS7": {
+          "frame": 0,
+          "overrun": 0,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        }
+      }
+    },
+    {
+      "波特率": 1500000,
+      "通过": true,
+      "错误增量": {
+        "/dev/ttyS4": {
+          "frame": 0,
+          "overrun": 0,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        },
+        "/dev/ttyS7": {
+          "frame": 0,
+          "overrun": 0,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        }
+      }
+    },
+    {
+      "波特率": 2000000,
+      "通过": true,
+      "错误增量": {
+        "/dev/ttyS4": {
+          "frame": 0,
+          "overrun": 0,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        },
+        "/dev/ttyS7": {
+          "frame": 0,
+          "overrun": 0,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        }
+      }
+    },
+    {
+      "波特率": 2500000,
+      "通过": true,
+      "错误增量": {
+        "/dev/ttyS4": {
+          "frame": 0,
+          "overrun": 0,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        },
+        "/dev/ttyS7": {
+          "frame": 0,
+          "overrun": 0,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        }
+      }
+    },
+    {
+      "波特率": 3000000,
+      "通过": true,
+      "错误增量": {
+        "/dev/ttyS4": {
+          "frame": 0,
+          "overrun": 0,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        },
+        "/dev/ttyS7": {
+          "frame": 0,
+          "overrun": 0,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        }
+      }
+    },
+    {
+      "波特率": 3500000,
+      "通过": true,
+      "错误增量": {
+        "/dev/ttyS4": {
+          "frame": 0,
+          "overrun": 0,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        },
+        "/dev/ttyS7": {
+          "frame": 0,
+          "overrun": 0,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        }
+      }
+    },
+    {
+      "波特率": 4000000,
+      "通过": false,
+      "错误增量": {
+        "/dev/ttyS4": {
+          "frame": 0,
+          "overrun": 0,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        },
+        "/dev/ttyS7": {
+          "frame": 0,
+          "overrun": 2,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        }
+      }
+    }
+  ],
+  "持续测试结果": [
+    {
+      "文件": "stress-1500000.json",
+      "波特率": 1500000,
+      "通过": true,
+      "完整收发子项数": 20,
+      "最后一项": {
+        "direction": "/dev/ttyS7 -> /dev/ttyS4",
+        "expected_bytes": 1048576,
+        "received_bytes": 1048576,
+        "pass": true
+      },
+      "错误增量": {
+        "/dev/ttyS4": {
+          "frame": 0,
+          "overrun": 0,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        },
+        "/dev/ttyS7": {
+          "frame": 0,
+          "overrun": 0,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        }
+      }
+    },
+    {
+      "文件": "stress-2000000.json",
+      "波特率": 2000000,
+      "通过": false,
+      "完整收发子项数": 6,
+      "最后一项": {
+        "direction": "/dev/ttyS4 -> /dev/ttyS7",
+        "expected_bytes": 1048576,
+        "received_bytes": 1048572,
+        "pass": false
+      },
+      "错误增量": {
+        "/dev/ttyS4": {
+          "frame": 0,
+          "overrun": 0,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        },
+        "/dev/ttyS7": {
+          "frame": 0,
+          "overrun": 1,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        }
+      }
+    },
+    {
+      "文件": "stress-2500000.json",
+      "波特率": 2500000,
+      "通过": false,
+      "完整收发子项数": 4,
+      "最后一项": {
+        "direction": "/dev/ttyS4 -> /dev/ttyS7",
+        "expected_bytes": 1048576,
+        "received_bytes": 1048558,
+        "pass": false
+      },
+      "错误增量": {
+        "/dev/ttyS4": {
+          "frame": 0,
+          "overrun": 0,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        },
+        "/dev/ttyS7": {
+          "frame": 0,
+          "overrun": 1,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        }
+      }
+    },
+    {
+      "文件": "stress-3000000.json",
+      "波特率": 3000000,
+      "通过": false,
+      "完整收发子项数": 4,
+      "最后一项": {
+        "direction": "/dev/ttyS4 -> /dev/ttyS7",
+        "expected_bytes": 1048576,
+        "received_bytes": 1048549,
+        "pass": false
+      },
+      "错误增量": {
+        "/dev/ttyS4": {
+          "frame": 0,
+          "overrun": 0,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        },
+        "/dev/ttyS7": {
+          "frame": 0,
+          "overrun": 3,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        }
+      }
+    },
+    {
+      "文件": "stress-3500000.json",
+      "波特率": 3500000,
+      "通过": false,
+      "完整收发子项数": 0,
+      "最后一项": {
+        "direction": "/dev/ttyS4 -> /dev/ttyS7",
+        "expected_bytes": 1048576,
+        "received_bytes": 1048574,
+        "pass": false
+      },
+      "错误增量": {
+        "/dev/ttyS4": {
+          "frame": 0,
+          "overrun": 0,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        },
+        "/dev/ttyS7": {
+          "frame": 0,
+          "overrun": 2,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        }
+      }
+    },
+    {
+      "文件": "dma-stress-4000000.json",
+      "波特率": 4000000,
+      "通过": false,
+      "完整收发子项数": 0,
+      "最后一项": {
+        "direction": "/dev/ttyS4 -> /dev/ttyS7",
+        "expected_bytes": 1048576,
+        "received_bytes": 974848,
+        "pass": false
+      },
+      "错误增量": {
+        "/dev/ttyS4": {
+          "frame": 0,
+          "overrun": 0,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        },
+        "/dev/ttyS7": {
+          "frame": 0,
+          "overrun": 0,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        }
+      }
+    },
+    {
+      "文件": "irq-split-stress-4000000.json",
+      "波特率": 4000000,
+      "通过": false,
+      "完整收发子项数": 0,
+      "最后一项": {
+        "direction": "/dev/ttyS4 -> /dev/ttyS7",
+        "expected_bytes": 1048576,
+        "received_bytes": 1048574,
+        "pass": false
+      },
+      "错误增量": {
+        "/dev/ttyS4": {
+          "frame": 0,
+          "overrun": 0,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        },
+        "/dev/ttyS7": {
+          "frame": 0,
+          "overrun": 1,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        }
+      }
+    }
+  ],
+  "恢复状态": {
+    "波特率": 115200,
+    "8N1": true,
+    "UART_DMA": "disabled",
+    "说明": "默认恢复115200；连续通过最高已测档1.5M，非物理上限。"
+  },
+  "范围": "当前同板对插。未记录线长、端接电阻实测、波形和独立时基；未做长线、长时可靠性、EMC或1.5M与2M之间的细分扫描。",
+  "source_summary_sha256": "d289c74c02fd39d1247515e36c05995fba7fe53a0c5c9e981134fe08ae61c90b"
+}

@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-2.0-only
 from pathlib import Path
-import datetime,hashlib,json,os,platform,subprocess
+import datetime,hashlib,json,os,platform,pwd,subprocess
 ROOT=Path(__file__).resolve().parents[2]
 BOARD=ROOT/'board'
 STATE=Path('/var/lib/rk3588-board-kit')
@@ -31,3 +31,12 @@ def configuration(path='/etc/default/lbm5-interfaces'):
   if l and not l.lstrip().startswith('#') and '=' in l:
    k,v=l.split('=',1);d[k.strip()]=v.strip().strip('"\'')
  return d
+
+def desktop_user():
+ for name in (os.environ.get('SUDO_USER'), 'ymbot'):
+  if name and name!='root':
+   try:
+    if pwd.getpwnam(name).pw_uid>=1000:return name
+   except KeyError:pass
+ try:return pwd.getpwuid(1000).pw_name
+ except KeyError:return 'cat'

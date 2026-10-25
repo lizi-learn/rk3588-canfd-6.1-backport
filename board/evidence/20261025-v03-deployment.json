@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-25",
+  "profile": "RK3588 LubanCat-5IOB, LBM5-DIBAN-V01A, Ubuntu22.04 ARM64, vendor Linux6.1.172",
+  "source_account_on_repeat": "ymbot",
+  "target_account": "ymbot",
+  "setup_repeat_runs": 2,
+  "setup_worker_configuration_complete": true,
+  "independent_health_pass": true,
+  "system_password_change": {
+    "method": "passwd/PAM",
+    "fresh_ssh_login_verified": true,
+    "sudo_verified": true,
+    "password_in_public_repository": false
+  },
+  "todesk_password_change": {
+    "version": "4.8.5.1",
+    "new_payload_crypto_self_check": true,
+    "configuration_readback_match": true,
+    "device_identity_preserved": true,
+    "service_active": true,
+    "peer_password_login": "not tested"
+  },
+  "chromium_repair": {
+    "observed_failure": "SingletonLock referred to the pre-rename hostname and a dead Chromium PID. No running Chromium or live singleton socket.",
+    "recovery": "Archive/remove only three stale singleton symlinks; preserve user profile.",
+    "webpage_rendering": "observed after repair",
+    "login_keyring": "unlocked for this session; automatic GNOME login can require unlock on a later login; no keyring reset or basic password store"
+  },
+  "offline_checks": {
+    "unit_tests": 13,
+    "source_hashes": "pass",
+    "Python_syntax": "pass",
+    "shell_syntax": "pass"
+  },
+  "module_and_overlay_build": "Target-board native compilation and full overlay merge passed during repeat setup.",
+  "physical_bus_test_this_revision": "not repeated; no bus traffic from setup/health",
+  "fresh_reimage_full_install": "not tested; original received BSP already had GNOME/Mesa/NoMachine/kernel headers. Missing-component branches require separately sourced vendor inputs as documented.",
+  "power_on_stopwatch": "not measured",
+  "hardware_zero_error_acceptance": "not granted; retain classic/FD historical failures."
+}

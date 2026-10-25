@@ -48,3 +48,8 @@ rate=json.loads((root/'board/evidence/20261025-rs485-rate.json').read_text())
 if rate['最高持续验证通过波特率']!=1500000 or not rate['最高档位验证']['所有逐字节与SHA256比较一致']:
     raise SystemExit('Unexpected sustained RS485 rate claim.')
 print('Latest rate/endurance evidence retained; no production acceptance claim.')
+
+logos=json.loads((root/'board/evidence/20261025-system-logos.json').read_text())
+if logos['reboot_performed'] or logos['startup']['bootloader_flashed'] or logos['physical_monitor_power_on_visual_test']!='not performed':
+    raise SystemExit('Logo audit must retain the unverified firmware visual boundary.')
+print('Logo evidence retained: userspace assets verified; early firmware screen not visually tested.')

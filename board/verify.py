@@ -97,7 +97,7 @@ def main():
  p.add_argument('--user',default=desktop_user());p.add_argument('--output',type=Path);a=p.parse_args();require_root()
  lock=open('/run/lbm5-interface-test.lock','w');fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
  out=a.output or STATE/('verification-'+now().replace(':','')+'.json')
- r={'started_at':now(),'kit_version':'0.3.0','scope':'health + physical cross-port tests' if a.physical else 'read-only health checks','hardware':{},'checks':{},'physical':'not requested','remote_peer_interaction':'not tested by this script','power_on_stopwatch':'not measured','pass':False}
+ r={'started_at':now(),'kit_version':'0.3.1','scope':'health + physical cross-port tests' if a.physical else 'read-only health checks','hardware':{},'checks':{},'physical':'not requested','remote_peer_interaction':'not tested by this script','power_on_stopwatch':'not measured','pass':False}
  def check(name,ok,detail):r['checks'][name]={'pass':bool(ok),'detail':detail}
  try:
   device=profile();r['hardware']={'model':device['model'],'kernel_release':platform.release(),'kernel_build':platform.version(),'architecture':platform.machine()}
@@ -125,6 +125,15 @@ def main():
    expected=json.loads(setup_plan.read_text()) if setup_plan.exists() else {'target_user':'ymbot','hostname':'ymbot'}
    check('branded desktop account',u.pw_uid==1000 and a.user==expected['target_user'] and run('hostname').strip()==expected['hostname'],{'user':a.user,'uid':u.pw_uid,'hostname':run('hostname').strip()})
    check('official brain logo',sha(logo)=='c3fb34bb5b182375cbb30c5d9e2cc16808203e5b5b22a0781b7e1fbbaba635b6','Official source bytes; centered on black background.')
+   # v0.3.0 devices may not have run the logo extension yet; check it once configured.
+   if (STATE/'last-branding.json').exists():
+    from lib.branding import LOGO_TARGETS,LOGO_SHA,boot_audit
+    branded=json.loads((STATE/'last-branding.json').read_text()).get('logos',[])
+    check('system logo records',any(e.get('path')=='/usr/share/pixmaps/ubuntu-logo-icon.png' for e in branded),'Applied logo manifest exists.')
+    for entry in branded:
+     target=entry['path'];ok=target in LOGO_TARGETS and Path(target).is_file() and sha(target)==LOGO_SHA
+     check('system logo '+target,ok,'Official brain asset bytes; missing files fail.')
+    r['boot_branding_audit']=boot_audit()
    for package in ['chromium','gnome-sound-recorder']:
     version=run('dpkg-query','-W','-f=${db:Status-Status}',package,check=False)
     check(package+' installed',version.returncode==0 and version.stdout=='installed','Package installation only; no microphone capture or GUI action in read-only health check.')

@@ -19,7 +19,7 @@ ToDesk 已安装则保留版本、设备 ID 和密码。缺少时下载锁定 SH
 3. 下载本仓库的固定版本并核对来源。以下命令均在目标板仓库根目录执行：
 
 ```sh
-git clone --branch v0.3.0 https://github.com/lizi-learn/rk3588-canfd-6.1-backport.git
+git clone --branch v0.3.1 https://github.com/lizi-learn/rk3588-canfd-6.1-backport.git
 cd rk3588-canfd-6.1-backport
 python3 scripts/check_source.py
 sudo ./board/optimize.sh --carrier lbm5-diban-v01a --dry-run

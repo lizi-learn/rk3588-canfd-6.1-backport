@@ -2,7 +2,7 @@
 
 RK3588 / Linux 6.1.172 的实验性 CAN FD 驱动回移，以及 LBM5-DIBAN-V01A 自研底板的配置与独立验证工具。驱动主体来自 Linux 上游，本项目完成 6.1 API 兼容、板级适配、位时序调优及实机验证，保留原作者版权与 GPL-2.0-only 许可。
 
-**v0.3.0：增加从接手同款 BSP 新机开始的配置入口、ymbot 账户/主机名、大脑 logo、录音机、隐藏密码设置和 Chromium 改名锁修复。优化与验证继续分开。CAN FD 5M 稳定性仍未通过，不显示默认硬件绿灯。**
+**v0.3.1：增加从接手同款 BSP 新机开始的配置入口、ymbot 账户/主机名、大脑 logo、录音机、隐藏密码设置和 Chromium 改名锁修复；补齐“关于”页面图标与启动标志审查。优化与验证继续分开。CAN FD 5M 稳定性仍未通过，不显示默认硬件绿灯。**
 
 | 实测项目（2026-10-25） | 结果 |
 | --- | --- |
@@ -21,7 +21,7 @@ RK3588 / Linux 6.1.172 的实验性 CAN FD 驱动回移，以及 LBM5-DIBAN-V01A
 先看 [从接手到交付操作单](docs/FIRST_BOOT.md)。固定适用：LBM5-DIBAN-V01A、LubanCat-5IO(B) BSP、Ubuntu22.04 ARM64、Linux6.1.172。接手的实机镜像已含 Mesa26.2.3、匹配头文件和 NoMachine；缺少时需提供厂商/镜像组件及哈希，脚本不猜测下载链接。缺 GNOME 时支持安装，但全新刷机重装分支尚未实机验收。
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/lizi-learn/rk3588-canfd-6.1-backport/v0.3.0/board/bootstrap.sh -o /tmp/rk3588-kit.sh
+curl -fsSL https://raw.githubusercontent.com/lizi-learn/rk3588-canfd-6.1-backport/v0.3.1/board/bootstrap.sh -o /tmp/rk3588-kit.sh
 # 一键配置；按提示隐藏输入系统和 ToDesk 新密码；完成后重启
 bash /tmp/rk3588-kit.sh setup --carrier lbm5-diban-v01a --reboot
 ```
@@ -38,6 +38,10 @@ bash /tmp/rk3588-kit.sh verify --physical
 已有设备保留密码重复配置：`setup --carrier lbm5-diban-v01a --keep-password`。初始账户默认自动识别，也可 `--source-user cat`；第二路485未焊接用 `--rs485-2 off`。公开脚本不含统一默认密码、Wi-Fi凭据或设备远控身份。
 
 Git clone 用户执行 `sudo ./board/setup.sh --carrier lbm5-diban-v01a`；增量优化仍用 `board/optimize.sh`，验证仍用 `board/verify.sh`。`--dry-run` 只预检，优化和配置不发送总线帧。回退与缺少组件时的参数见 [操作单](docs/FIRST_BOOT.md) 和 [接线/增量说明](docs/BOARD_KIT.md)。`docs/pdf/` 保留 v0.2 历史报告，当前入口以 v0.3 操作单为准。
+
+## 系统标志
+
+新机 setup 自动替换 GNOME“关于”页面浅/深色图标，以及根文件系统里备用的 Plymouth 图标。已有 v0.3.0 设备可运行 `brand --apply`，见 [标志与启动审查](docs/BRANDING.md)。当前快速启动仍保持 Plymouth 禁用、内核 Linux logo 禁用；未刷写 U-Boot，未实屏确认其早期画面。
 
 ## 5M 的关键结果
 

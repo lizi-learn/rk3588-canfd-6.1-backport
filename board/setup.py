@@ -8,7 +8,7 @@ from lib.remote import installed
 from lib.provision import checked_file,unpack_mesa,session_command,change_password
 from lib.identity import account_preflight,rename
 from lib.snapshot import Snapshot
-VERSION='v0.3.0'
+VERSION='v0.3.1'
 LOGO_URL='https://www.ymbot.com/static/png/logo-CM8nhUEK.png'
 LOGO_SHA='c3fb34bb5b182375cbb30c5d9e2cc16808203e5b5b22a0781b7e1fbbaba635b6'
 DESKTOP=['gdm3','gnome-shell','ubuntu-session','gnome-control-center','gnome-settings-daemon','gnome-keyring','dbus-x11','xserver-xorg-core','xserver-xorg-input-libinput','x11-xserver-utils','gnome-shell-extension-ubuntu-dock','gnome-shell-extension-appindicator','gnome-shell-extension-desktop-icons-ng','gnome-sound-recorder','gnome-screenshot','python3-nacl','mesa-utils','curl']
@@ -67,7 +67,11 @@ def brand(user,snap,inputs):
   for key,value in values.items():
    snap.data['gsettings'][schema+'/'+key]=session_command(user,'gsettings','get',schema,key).strip();snap.flush()
    session_command(user,'gsettings','set',schema,key,value)
- return {'official_logo_sha256':LOGO_SHA,'wallpaper':target.as_uri(),'recorder':'gnome-sound-recorder installed; no microphone capture performed'}
+ from lib.branding import apply_logos
+ snap.remember(STATE/'last-branding.json')
+ system_logos=apply_logos(target,snap)
+ save_json(STATE/'last-branding.json',dict(system_logos,at=now(),backup=str(snap.path)))
+ return {'system_logos':system_logos,'official_logo_sha256':LOGO_SHA,'wallpaper':target.as_uri(),'recorder':'gnome-sound-recorder installed; no microphone capture performed'}
 
 def worker(planpath):
  os.umask(0o077);plan=json.loads(Path(planpath).read_text());directory=Path(planpath).parent

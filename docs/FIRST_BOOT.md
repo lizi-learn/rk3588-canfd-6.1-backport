@@ -1,4 +1,4 @@
-# 接手新机到交付：v0.3.0
+# 接手新机到交付：v0.3.1
 
 适用固定组合：LBM5-DIBAN-V01A 底板、LubanCat-5IO/5IOB RK3588、Ubuntu 22.04 ARM64、厂商 Linux 6.1.172。两路 RS485 均焊接；未焊第二路的旧板传 `--rs485-2 off`。桌面用途为不接显示器的远程访问。不同内核、不同底板或纯 Ubuntu 镜像需要单独适配。
 
@@ -9,7 +9,7 @@
 需要配无线网时先执行 `sudo ./board/wifi.sh`，通过隐藏输入设置 Wi-Fi 口令；用 `nmcli device show` 取得地址，并从管理电脑验证该地址的 SSH。脚本不扫描/复制另一台电脑的网络凭据，不写死 IP。
 
 ```sh
-git clone --branch v0.3.0 https://github.com/lizi-learn/rk3588-canfd-6.1-backport.git
+git clone --branch v0.3.1 https://github.com/lizi-learn/rk3588-canfd-6.1-backport.git
 cd rk3588-canfd-6.1-backport
 python3 scripts/check_source.py
 sudo ./board/setup.sh --carrier lbm5-diban-v01a --dry-run
@@ -30,7 +30,7 @@ sudo ./board/setup.sh --carrier lbm5-diban-v01a --reboot
 1. 核对 BSP、原账户、目标账户冲突和输入哈希；缺少 GNOME 时通过 Ubuntu 软件源安装 GNOME/GDM、Dock、控制中心、录音机和依赖。
 2. 在目标机用匹配的厂商头文件编译 CAN 回移模块；合并全部 DT 插件后核对两路 CAN/UART 节点。默认普通 CAN 1M、485 115200/8N1，第二路启用。
 3. 配置 GNOME X11、1920×1080 无屏输出、Panfrost/Mesa 路径、Chromium 会话后端、禁空闲休眠、NoMachine/ToDesk、禁 NoMachine 音频转发；移除无网络文件系统依赖时的开机 network-online 等待，关闭 Wi-Fi 省电。
-4. 安装 GNOME Sound Recorder，仅安装和启动检查，不自动录音。使用官网原始蓝色大脑 logo，黑底居中，并设置头像。
+4. 安装 GNOME Sound Recorder，仅安装和启动检查，不自动录音。使用官网原始蓝色大脑 logo，黑底居中，并设置头像；补齐“关于”页面和备用 Plymouth 图标，详见 [BRANDING.md](BRANDING.md)。
 5. 通过独立 root 服务停止旧桌面、迁移账户和主目录到 `ymbot`，保留 UID/GID、附加组、密码、浏览器资料与 SSH 密钥；主机名改 `ymbot`。清理已经确认失效的 Chromium singleton 符号链接，保留归档。旧登录名消失，旧主目录保留兼容链接。
 6. 配置完成后，带 `--reboot` 则一分钟后重启；未带则手动重启。原 SSH 在改名期间断开属于预期。重连用 `ssh ymbot@实际IP`，使用刚输入的新系统密码。
 

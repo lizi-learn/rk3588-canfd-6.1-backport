@@ -1,0 +1,48 @@
+{
+  "date": "2026-10-25",
+  "scope": "GNOME About logo and userspace fallback logo files; read-only boot-stage audit",
+  "official_png_sha256": "c3fb34bb5b182375cbb30c5d9e2cc16808203e5b5b22a0781b7e1fbbaba635b6",
+  "asset_paths": [
+    "/usr/share/pixmaps/ubuntu-logo-icon.png",
+    "/usr/share/pixmaps/ubuntu-logo-dark.png",
+    "/usr/share/plymouth/themes/spinner/watermark.png",
+    "/usr/share/plymouth/themes/spinner/bgrt-fallback.png"
+  ],
+  "asset_hash_checks": "pass",
+  "about_light_ui": "screenshot observed official brain logo",
+  "about_dark_ui": "file hash only; no theme-switch visual test",
+  "repeat_apply": "pass; existing local diversions retained",
+  "startup": {
+    "plymouth_disabled": true,
+    "splash_argument": false,
+    "kernel_logo_config": "disabled",
+    "filesystem_boot_logo_resources": [],
+    "firmware_stage": "Not visually tested; never infer U-Boot logo absence from Linux/Plymouth settings.",
+    "boot_arguments_changed": false,
+    "bootloader_flashed": false,
+    "initramfs_rebuilt": false,
+    "note": "Root-filesystem Plymouth artwork is replaced as an inactive fallback. The already-built initramfs is not changed; there is no active Plymouth splash in this profile.",
+    "kernel_config_source": "/boot/config-6.1.172",
+    "plymouth_start_condition_result": "no"
+  },
+  "boot_assets_before_after_sha256_match": true,
+  "loader_prefix_before_after_sha256_match": true,
+  "reboot_performed": false,
+  "physical_monitor_power_on_visual_test": "not performed",
+  "kernel_can_rs485_configuration_changed": false,
+  "health_check": "pass (staged v0.3.1)",
+  "source_readonly_reference": {
+    "repository": "https://github.com/LubanCat/u-boot",
+    "commit": "b14196eade471bbc000c368f8555f2a2a1ecc17d",
+    "paths": [
+      "arch/arm/mach-rockchip/resource_img.c",
+      "drivers/video/drm/rockchip_display.c"
+    ],
+    "matches_target_binary_exactly": "not established"
+  },
+  "rollback_dry_run": "pass",
+  "rollback_execution": {
+    "restored_original_vendor_file_hashes": true,
+    "reapplied_official_brain_pngs": true
+  }
+}

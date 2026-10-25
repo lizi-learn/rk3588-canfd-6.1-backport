@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.1 - 2026-10-25
+
+- Replace the remaining GNOME About light/dark logo files with the original brain PNG.
+- Replace inactive root-filesystem Plymouth fallback/watermark images, preserving fast boot: no splash enablement, initramfs rebuild or bootloader flash.
+- Preserve vendor images with local dpkg diversions and support backup rollback.
+- Add a standalone brand entry and read-only boot-logo audit; disclose unverified early firmware display instead of claiming a boot-screen visual pass.
+
+
 ## 0.3.0 - 2026-10-25
 
 - Add received-board setup entry with GNOME/recorder package preparation, verified local vendor inputs, root worker, UID-preserving ymbot migration and original brain logo.

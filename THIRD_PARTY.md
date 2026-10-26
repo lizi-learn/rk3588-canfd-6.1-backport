@@ -38,3 +38,7 @@ No claim of upstream acceptance, official vendor support or physical CAN-FD cert
 The YMBOT brain logo is downloaded, not bundled or relicensed by this repository. Source: https://www.ymbot.com/static/png/logo-CM8nhUEK.png ; SHA256 `c3fb34bb5b182375cbb30c5d9e2cc16808203e5b5b22a0781b7e1fbbaba635b6`. Trademark/artwork rights remain with their owner.
 
 NoMachine, Mesa BSP bundles, matching vendor headers and native browser installers are not redistributed here. Supply the matching components and their source/license obligations as described in `docs/FIRST_BOOT.md`. ToDesk installer provenance/hash is in `board/assets/remote-packages.json`. The optional ToDesk password writer is a version-specific local configuration implementation tested with 4.8.5.1; it is not an official vendor API or a password-recovery tool and never decrypts pre-existing credentials.
+
+## Static teaching Wiki build dependencies
+
+The Wiki renderer uses markdown-it-py 4.0.0 and mdurl 0.1.2, both MIT-licensed, installed from PyPI into the build environment. Their source code is not bundled into the static HTML output. Upstream: https://github.com/executablebooks/markdown-it-py and https://github.com/executablebooks/mdurl . The Wiki CSS, browser JavaScript and build scripts are maintained in this repository under its license. No third-party fonts, analytics or runtime scripts are loaded by the site.

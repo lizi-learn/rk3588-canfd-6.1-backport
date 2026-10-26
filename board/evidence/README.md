@@ -1,6 +1,6 @@
 # 真实验证证据（脱敏摘要）
 
-主对象为 lubancat-test（同款自研底板、两路485均焊接）。所有记录日期为2026-10-25 Asia/Shanghai。根目录旧 `evidence/` 是另一台旧机内部回环，不合并计数。
+主对象为 lubancat-test（现已更名 ymbot，同款自研底板、两路485均焊接）。下表总线记录日期为2026-10-25 Asia/Shanghai；后续审查各自记录日期。根目录旧 `evidence/` 是另一台旧机内部回环，不合并计数。
 
 | 摘要 | 状态 / 含义 |
 | --- | --- |
@@ -24,3 +24,6 @@
 代码来源和勘误解释：`driver/rockchip_canfd-rx.c`的勘误6处理增加`tx_extended_as_standard_errors`与`tx_errors`后重试；当前统计一致，说明进入该恢复路径。驱动处理了已识别异常，不等于消除了硬件勘误，或排除了其他物理条件问题。
 
 `20261025-system-logos.json`：关于页面实屏截图、全局图标哈希和启动标志只读审查；Plymouth/Linux logo保持禁用，U-Boot未刷写、未做物理开机画面验收。
+## 无线接口只读审查
+
+`20261026-wifi-interfaces.json` 是 RTL8852BE / phy0 的脱敏归属与参数摘要。未修改网络，不证明 P2P 功能或并发吞吐；说明见 [Wi-Fi 问答](../../docs/faq/wifi.md)。

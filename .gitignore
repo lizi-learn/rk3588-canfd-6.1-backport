@@ -13,3 +13,6 @@ __pycache__/
 .env
 *.pem
 *.key
+# Generated static Wiki and deployment state
+wiki/dist/
+wiki/.wrangler/

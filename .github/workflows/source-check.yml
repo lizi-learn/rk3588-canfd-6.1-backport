@@ -1,4 +1,4 @@
-name: Source integrity
+name: Source integrity and Wiki
 on: [push, pull_request, workflow_dispatch]
 permissions:
   contents: read
@@ -21,3 +21,19 @@ jobs:
         run: |
           python3 -m unittest discover -s tests -v
           for f in board/*.sh; do bash -n "$f"; done
+
+      - name: Build and check teaching Wiki
+        run: |
+          python3 -m venv .venv
+          .venv/bin/python -m pip install -r wiki/requirements.txt
+          .venv/bin/python wiki/build.py
+          .venv/bin/python wiki/check.py
+          node --check wiki/assets/app.js
+
+      - name: Publish Wiki to Cloudflare Pages
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.WIKI_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.WIKI_CLOUDFLARE_ACCOUNT_ID }}
+          WRANGLER_SEND_METRICS: 'false'
+        run: npx --yes wrangler@4.152.0 pages deploy wiki/dist --project-name ymbot-5io-wiki --branch main --commit-hash "$GITHUB_SHA"

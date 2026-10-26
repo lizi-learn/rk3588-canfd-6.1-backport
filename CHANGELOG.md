@@ -1,5 +1,12 @@
 # Changelog
 
+## Documentation / Wiki - 2026-10-26
+
+- Present the project as YMBOT 5IO board system optimization, retaining repository URLs and published driver releases.
+- Add a Cloudflare-hosted teaching Wiki from canonical Markdown, with full-text search, code copy, mobile navigation and explicit verification limits.
+- Explain the actual RTL8852BE wlan0 / p2p0 mapping from a read-only audit, and consolidate CAN, RS485, desktop and boot questions.
+- Publish the Wiki after source, offline board and static-site checks on main; keep credentials in repository Secrets and preserve all hardware failure records.
+
 ## 0.3.1 - 2026-10-25
 
 - Replace the remaining GNOME About light/dark logo files with the original brain PNG.

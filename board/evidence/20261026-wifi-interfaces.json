@@ -1,0 +1,18 @@
+{
+  "date": "2026-10-26",
+  "scope": "Sanitized read-only audit of the current board, not a P2P functionality test",
+  "hardware": "one PCIe Realtek RTL8852BE",
+  "driver": "rtl8852be",
+  "module": "8852be",
+  "interfaces": {
+    "wlan0": {"nm_type": "wifi", "state": "connected", "phy": "phy0"},
+    "p2p0": {"nm_type": "wifi", "state": "disconnected", "phy": "phy0"},
+    "p2p-dev-wlan0": {"nm_type": "wifi-p2p", "state": "disconnected"},
+    "p2p-dev-p2p0": {"nm_type": "wifi-p2p", "state": "disconnected"}
+  },
+  "same_physical_pci_device_verified": true,
+  "module_parameters": {"ifname": "wlan%d", "if2name": "p2p%d", "rtw_sel_p2p_iface": "1"},
+  "network_configuration_changed": false,
+  "not_tested": ["P2P peer connection", "hotspot", "casting", "concurrent throughput"],
+  "redacted": ["SSID", "IP addresses", "MAC addresses", "credentials", "full PCI paths"]
+}

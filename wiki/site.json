@@ -1,0 +1,19 @@
+{
+  "title": "YMBOT 5IO 开发板系统优化",
+  "url": "https://ymbot-5io-wiki.pages.dev",
+  "repository": "https://github.com/lizi-learn/rk3588-canfd-6.1-backport",
+  "updated": "2026-10-26",
+  "pages": [
+    {"slug":"start","source":"docs/FIRST_BOOT.md","title":"从接手到交付","group":"操作手册","description":"新机接手、联网、一键配置与独立验证。"},
+    {"slug":"interfaces","source":"docs/BOARD_KIT.md","title":"CAN / RS485 接口配置","group":"操作手册","description":"适用板型、针脚、默认速率、台架接线和回退。"},
+    {"slug":"faq","source":"docs/FAQ.md","title":"实机问答索引","group":"实机问答","description":"从现象出发，找到原因、处理步骤和验证范围。"},
+    {"slug":"wifi","source":"docs/faq/wifi.md","title":"为什么显示两个 Wi-Fi","group":"实机问答","description":"一块无线网卡、两个逻辑接口：wlan0、p2p0 与 Wi-Fi Direct。"},
+    {"slug":"can","source":"docs/faq/can.md","title":"CAN 的速率与验收","group":"实机问答","description":"500k、1M、CAN FD 5M，以及收齐帧仍不能通过的原因。"},
+    {"slug":"rs485","source":"docs/faq/rs485.md","title":"RS485 的速率与接线","group":"实机问答","description":"UART4 / UART7，1.5M 长测与高速丢字节。"},
+    {"slug":"desktop","source":"docs/faq/desktop.md","title":"桌面、浏览器与音频","group":"实机问答","description":"X11 / Wayland、旧主机名锁、GPU 加速和无屏远程桌面。"},
+    {"slug":"boot","source":"docs/faq/boot.md","title":"启动耗时与优化","group":"实机问答","description":"60.614s 到 6.6–7.2s；区分系统指标、网络和真正可用时间。"},
+    {"slug":"branding","source":"docs/BRANDING.md","title":"系统标志与开机画面","group":"实机问答","description":"关于页面、Plymouth、Linux logo 与 U-Boot 的不同阶段。"},
+    {"slug":"evidence","source":"board/evidence/README.md","title":"实测证据与失败记录","group":"查阅与维护","description":"公开脱敏记录，包含失败样本及测试边界。"},
+    {"slug":"maintenance","source":"wiki/README.md","title":"补充问答与发布","group":"查阅与维护","description":"同一份 Markdown，维护 README、教学 Wiki 与 Cloudflare 发布。"}
+  ]
+}

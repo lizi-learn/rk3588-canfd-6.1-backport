@@ -1,4 +1,6 @@
-# RK3588 CAN FD backport + LBM5 board kit
+# YMBOT 5IO 开发板系统优化
+
+同事教学与查阅入口：**[在线 Wiki](https://ymbot-5io-wiki.pages.dev/)**。从新机配置、CAN/RS485 接线与验证，到无屏桌面、浏览器、Wi-Fi 和启动优化，按实机问题整理。源码仓库保留现有地址，历史发布链接继续有效。
 
 RK3588 / Linux 6.1.172 的实验性 CAN FD 驱动回移，以及 LBM5-DIBAN-V01A 自研底板的配置与独立验证工具。驱动主体来自 Linux 上游，本项目完成 6.1 API 兼容、板级适配、位时序调优及实机验证，保留原作者版权与 GPL-2.0-only 许可。
 
@@ -15,6 +17,15 @@ RK3588 / Linux 6.1.172 的实验性 CAN FD 驱动回移，以及 LBM5-DIBAN-V01A
 | 远程桌面 | NoMachine/ToDesk 服务、固定密码配置；配置读回不等于对端完整交互验收 |
 
 证据见 [board/evidence](board/evidence/)。CI 只做离线检查，不连接设备，不改变硬件验收结论。
+
+## 常见问题与教学 Wiki
+
+- [为什么有两个 Wi-Fi？](docs/faq/wifi.md)：同一块 RTL8852BE、同一个 phy0 的 wlan0 与 p2p0；后者由驱动预创建供 P2P 使用，并非第二块无线网卡。当前未连接，不影响 wlan0 已建立的连接；没有为了隐藏图标而关闭接口。
+- [普通 CAN / CAN FD、1M / 5M 怎么区分？](docs/faq/can.md)：500k 是配置值；FD 5M 是数据阶段速率。收齐帧仍可能发生总线错误，不能用零丢帧替代严格验收。
+- [485 能跑多快？两路分别在哪？](docs/faq/rs485.md)：UART4 / UART7；1.5M 是已测持续通过最高档，不是证明了物理极限。
+- [Chromium 打不开、llvmpipe 和无屏桌面](docs/faq/desktop.md)、[启动耗时的正确口径](docs/faq/boot.md)、[系统图标与开机画面](docs/BRANDING.md)。
+
+[完整问答索引](docs/FAQ.md) · [从接手到交付操作单](docs/FIRST_BOOT.md) · [Wiki 维护与 Cloudflare 发布](wiki/README.md)。后续有价值的问题补入 Markdown，保留实测日期、证据和未验证范围，再构建发布；网页与仓库使用同一份正文。
 
 ## 新机一键配置，独立验证
 

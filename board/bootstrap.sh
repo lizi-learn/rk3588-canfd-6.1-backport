@@ -7,7 +7,7 @@ action=${1:-}
 case "$action" in setup|optimize|verify|rollback|wifi|brand|repair-browser|todesk-password) shift;; *) echo "Usage: bash bootstrap.sh {setup|optimize|verify|rollback|wifi|brand|repair-browser|todesk-password} [arguments]" >&2; exit 2;; esac
 cache_dir=${XDG_CACHE_HOME:-$HOME/.cache}/rk3588-board-kit/$version
 if [ ! -d "$cache_dir" ]; then
-  release_url=https://github.com/lizi-learn/rk3588-canfd-6.1-backport/releases/download/$version
+  release_url=https://github.com/lizi-learn/ymbot-5io-system-optimization/releases/download/$version
   staging_dir=$(mktemp -d)
   trap 'rm -rf "$staging_dir"' EXIT
   archive=rk3588-board-kit-$version.tar.gz

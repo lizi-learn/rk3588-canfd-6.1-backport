@@ -22,7 +22,7 @@ style={
  'cell':ParagraphStyle('cell',fontName='CJK',fontSize=9,leading=13,textColor=INK,wordWrap='CJK'),
  'code':ParagraphStyle('code',fontName='CJK',fontSize=8.1,leading=12,textColor=INK,backColor=LIGHT,borderPadding=9,spaceAfter=10)
 }
-url='https://github.com/lizi-learn/rk3588-canfd-6.1-backport'
+url='https://github.com/lizi-learn/ymbot-5io-system-optimization'
 def load(name,default=None):
  p=E/name
  return json.loads(p.read_text()) if p.exists() else (default or {})
@@ -128,7 +128,7 @@ manual=[
  '适用：LBM5-DIBAN-V01A、RK3588、Ubuntu22.04 ARM64、LubanCat-5IOB BSP、Linux6.1.172。需要已有GNOME/GDM、/opt/mesa-26.2.3及完全匹配的厂商内核头文件。两路485均已焊接；备用未焊接板需--rs485-2 off。',
  'NoMachine预装9.2.18则保留；缺失时提供厂商ARM64服务端.deb和适用许可，优化命令加--nomachine-deb /绝对路径/安装包.deb。ToDesk已安装则保留版本与密码，缺失时使用清单中锁定哈希的社区包。新安装的固定密码需在ToDesk安全设置中建立；不把别机凭据写入仓库。',
  p('1  取固定版本并确认设备','sub'),
- code('git clone --branch v0.2.0 https://github.com/lizi-learn/rk3588-canfd-6.1-backport.git\ncd rk3588-canfd-6.1-backport\npython3 scripts/check_source.py\nuname -r\nsudo ./board/optimize.sh --carrier lbm5-diban-v01a --dry-run'),
+ code('git clone --branch v0.2.0 https://github.com/lizi-learn/ymbot-5io-system-optimization.git\ncd ymbot-5io-system-optimization\npython3 scripts/check_source.py\nuname -r\nsudo ./board/optimize.sh --carrier lbm5-diban-v01a --dry-run'),
  '脚本检查板型、ARM64、Ubuntu版本、活动U-Boot入口、Mesa和内核头文件；不支持的环境会停止。默认用户cat；其他用户加--user 用户名，验证也同样指定。',
  p('2  配无线网（有线SSH下可执行）','sub'),
  code('sudo ./board/wifi.sh\nnmcli -g IP4.ADDRESS device show wlan0'),
@@ -139,7 +139,7 @@ manual=[
  code('sudo ./board/optimize.sh --carrier lbm5-diban-v01a\nsudo reboot'),
  '停止总线业务后运行。工具会本机构建专用CAN回移驱动，配置两路1M、485 115200/8N1、无屏1080p、GNOME X11自动登录、已有GPU栈、Chromium后端、远控自启、禁NoMachine音频、禁休眠/锁屏和启动等待优化。它不发送测试帧，不自动重启。',
  p('4  重连后独立检查','sub'),
- code('cd rk3588-canfd-6.1-backport\nsudo ./board/verify.sh\n# 仅接线核对完、隔离业务后执行下一条\nsudo ./board/verify.sh --physical'),
+ code('cd ymbot-5io-system-optimization\nsudo ./board/verify.sh\n# 仅接线核对完、隔离业务后执行下一条\nsudo ./board/verify.sh --physical'),
  '第一条只检查服务/速率/别名/显示/GPU等；--physical才做实际CAN和485收发。完整台架测试约一分钟，耗时随异常超时变化。RS485测试临时切波特率，结束恢复原值。',
  'JSON结果与时间戳在/var/lib/rk3588-board-kit/，默认root可读。读取退出码：echo $?；0仅表示本次所列检查通过，非0查看exception、failure_reason和每项计数。数据完整但错误增量不为0也判失败。',
  code('sudo cat /var/lib/rk3588-board-kit/last-optimize.json\nsudo /usr/local/sbin/lbm5-interfaces status\nip -details -statistics link show can0\nip -details -statistics link show can1'),
@@ -160,7 +160,7 @@ manual=[
  code('sudo ./board/rollback.sh /var/backups/rk3588-board-kit/实际时间戳 --dry-run\nsudo ./board/rollback.sh /var/backups/rk3588-board-kit/实际时间戳\nsudo reboot'),
  '使用优化输出的真实备份路径，先核对dry-run。回退配置/服务开机状态/记录的偏好与Wi-Fi省电；保留安装的软件包。备份可能含私密应用配置，勿上传公开仓库。完整恢复分支未在空白新镜像上验收。',
  p('7  固定版本一键入口（替代手动git下载）','sub'),
- code('curl -fsSL https://raw.githubusercontent.com/lizi-learn/rk3588-canfd-6.1-backport/v0.2.0/board/bootstrap.sh -o /tmp/rk3588-kit.sh\nbash /tmp/rk3588-kit.sh optimize --carrier lbm5-diban-v01a\n# 手动重启并重连后，单独验证\nbash /tmp/rk3588-kit.sh verify --physical'),
+ code('curl -fsSL https://raw.githubusercontent.com/lizi-learn/ymbot-5io-system-optimization/v0.2.0/board/bootstrap.sh -o /tmp/rk3588-kit.sh\nbash /tmp/rk3588-kit.sh optimize --carrier lbm5-diban-v01a\n# 手动重启并重连后，单独验证\nbash /tmp/rk3588-kit.sh verify --physical'),
  p('启动器下载固定版本release包并核对SHA256，优化与验证不会互相调用。源码、脱敏证据及本报告见 '+url+' 。','small'),
 ])]
 build('lubancat-test-优化与真实验证报告.pdf','lubancat-test 优化与真实验证报告',report)

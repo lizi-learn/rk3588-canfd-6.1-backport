@@ -1,6 +1,6 @@
 # 补充问答与发布 Wiki
 
-Wiki：https://ymbot-5io-wiki.pages.dev/ 。展示名称为 **YMBOT 5IO 开发板系统优化**，GitHub 保留原仓库地址和历史版本链接。
+Wiki：https://ymbot-5io-wiki.pages.dev/ 。展示名称为 **YMBOT 5IO 开发板系统优化**，GitHub 仓库为 [ymbot-5io-system-optimization](https://github.com/lizi-learn/ymbot-5io-system-optimization)。旧仓库地址由 GitHub 重定向，历史标签和发布归档保持原始内容。
 
 ## 补充一个问题
 

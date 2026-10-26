@@ -9,8 +9,8 @@
 需要配无线网时先执行 `sudo ./board/wifi.sh`，通过隐藏输入设置 Wi-Fi 口令；用 `nmcli device show` 取得地址，并从管理电脑验证该地址的 SSH。脚本不扫描/复制另一台电脑的网络凭据，不写死 IP。
 
 ```sh
-git clone --branch v0.3.1 https://github.com/lizi-learn/rk3588-canfd-6.1-backport.git
-cd rk3588-canfd-6.1-backport
+git clone --branch v0.3.1 https://github.com/lizi-learn/ymbot-5io-system-optimization.git
+cd ymbot-5io-system-optimization
 python3 scripts/check_source.py
 sudo ./board/setup.sh --carrier lbm5-diban-v01a --dry-run
 ```

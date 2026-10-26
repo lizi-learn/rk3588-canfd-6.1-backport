@@ -1,7 +1,7 @@
 {
   "title": "YMBOT 5IO 开发板系统优化",
   "url": "https://ymbot-5io-wiki.pages.dev",
-  "repository": "https://github.com/lizi-learn/rk3588-canfd-6.1-backport",
+  "repository": "https://github.com/lizi-learn/ymbot-5io-system-optimization",
   "updated": "2026-10-26",
   "pages": [
     {"slug":"start","source":"docs/FIRST_BOOT.md","title":"从接手到交付","group":"操作手册","description":"新机接手、联网、一键配置与独立验证。"},

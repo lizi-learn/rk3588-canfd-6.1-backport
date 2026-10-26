@@ -1,5 +1,10 @@
 # Changelog
 
+## Repository rename - 2026-10-26
+
+- Rename the repository to `lizi-learn/ymbot-5io-system-optimization`, matching the broader system-optimization scope.
+- Update current setup, source and Wiki references; preserve existing release tags/assets and rely on GitHub redirects for historical links.
+
 ## Documentation / Wiki - 2026-10-26
 
 - Present the project as YMBOT 5IO board system optimization, retaining repository URLs and published driver releases.

@@ -1,6 +1,6 @@
 # YMBOT 5IO 开发板系统优化
 
-同事教学与查阅入口：**[在线 Wiki](https://ymbot-5io-wiki.pages.dev/)**。从新机配置、CAN/RS485 接线与验证，到无屏桌面、浏览器、Wi-Fi 和启动优化，按实机问题整理。源码仓库保留现有地址，历史发布链接继续有效。
+同事教学与查阅入口：**[在线 Wiki](https://ymbot-5io-wiki.pages.dev/)**。从新机配置、CAN/RS485 接线与验证，到无屏桌面、浏览器、Wi-Fi 和启动优化，按实机问题整理。源码仓库已更名为 [ymbot-5io-system-optimization](https://github.com/lizi-learn/ymbot-5io-system-optimization)。旧仓库地址由 GitHub 重定向，历史版本标签和发布归档保留。
 
 RK3588 / Linux 6.1.172 的实验性 CAN FD 驱动回移，以及 LBM5-DIBAN-V01A 自研底板的配置与独立验证工具。驱动主体来自 Linux 上游，本项目完成 6.1 API 兼容、板级适配、位时序调优及实机验证，保留原作者版权与 GPL-2.0-only 许可。
 
@@ -32,7 +32,7 @@ RK3588 / Linux 6.1.172 的实验性 CAN FD 驱动回移，以及 LBM5-DIBAN-V01A
 先看 [从接手到交付操作单](docs/FIRST_BOOT.md)。固定适用：LBM5-DIBAN-V01A、LubanCat-5IO(B) BSP、Ubuntu22.04 ARM64、Linux6.1.172。接手的实机镜像已含 Mesa26.2.3、匹配头文件和 NoMachine；缺少时需提供厂商/镜像组件及哈希，脚本不猜测下载链接。缺 GNOME 时支持安装，但全新刷机重装分支尚未实机验收。
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/lizi-learn/rk3588-canfd-6.1-backport/v0.3.1/board/bootstrap.sh -o /tmp/rk3588-kit.sh
+curl -fsSL https://raw.githubusercontent.com/lizi-learn/ymbot-5io-system-optimization/v0.3.1/board/bootstrap.sh -o /tmp/rk3588-kit.sh
 # 一键配置；按提示隐藏输入系统和 ToDesk 新密码；完成后重启
 bash /tmp/rk3588-kit.sh setup --carrier lbm5-diban-v01a --reboot
 ```

@@ -18,7 +18,7 @@ for entry in provenance['files']:
     path=root/folder/entry['file']
     if hashlib.sha256(path.read_bytes()).hexdigest()!=entry['sha256']:
         raise SystemExit('Upstream reference mismatch: '+str(path.relative_to(root)))
-for path in list((root/'scripts').glob('*.py'))+list((root/'board').rglob('*.py'))+[root/'tools/lbm5-canfd-test',root/'board/assets/lbm5-interfaces']:
+for path in list((root/'scripts').glob('*.py'))+list((root/'board').rglob('*.py'))+[root/'tools/lbm5-canfd-test',root/'tools/lbm5-rs485-rate-test',root/'board/assets/lbm5-interfaces']:
     ast.parse(path.read_text(),filename=str(path))
 summary=json.loads((root/'evidence/verification-summary.json').read_text())
 if summary['formal_application_frames']!=160000 or summary['external_receive_transmit_verified']:

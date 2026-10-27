@@ -6,11 +6,12 @@ RK3588 / Linux 6.1.172 的实验性 CAN FD 驱动回移，以及 LBM5-DIBAN-V01A
 
 **v0.3.1：增加从接手同款 BSP 新机开始的配置入口、ymbot 账户/主机名、大脑 logo、录音机、隐藏密码设置和 Chromium 改名锁修复；补齐“关于”页面图标与启动标志审查。优化与验证继续分开。CAN FD 5M 稳定性仍未通过，不显示默认硬件绿灯。**
 
-| 实测项目（2026-10-25） | 结果 |
+| 实测项目（分次记录） | 结果 |
 | --- | --- |
 | 普通 CAN 1M | 数据完整的多次记录之外，仍有原厂丢失/重复、回移驱动勘误6恢复失败记录，未完成零错误验收 |
 | FD+BRS 1M/5M，30分钟 | 12,386,944 帧全部收到；标准64字节帧两个方向各600秒零错误，扩展/混合负载累计每口 bus_error +6、一个 RX FIFO 异常，严格失败 |
-| RS485 UART4 / UART7 | 1.5M baud 连续双向20MiB+1000次换向通过；2M及以上持续测试丢字节；默认115200 |
+| RS485 2026-10-25历史装配 | 1.5M baud 连续双向20MiB+1000次换向通过；2M及以上持续失败 |
+| RS485 2026-10-27换芯片复测 | 1M持续20MiB+1000次换向通过；1.5M至4M持续失败；4M仅短测通过；默认115200，见[新旧对照](docs/RS485_CHIP_SWAP_20261027.md) |
 | 启动 systemd 指标 | 基线60.614s，优化后多次6.6–7.2s，改名重启6.786s；Wi-Fi约23–24s，不等同上电到远程可用 |
 | 无屏桌面 / GPU | GNOME X11、1080p、Mali-G610 Panfrost accelerated=yes |
 | 账户 / 桌面 / 应用 | ymbot 登录和主机名、官网大脑logo、GNOME录音机；Chromium旧主机名锁已修复并确认网页加载 |
@@ -22,7 +23,7 @@ RK3588 / Linux 6.1.172 的实验性 CAN FD 驱动回移，以及 LBM5-DIBAN-V01A
 
 - [为什么有两个 Wi-Fi？](docs/faq/wifi.md)：同一块 RTL8852BE、同一个 phy0 的 wlan0 与 p2p0；后者由驱动预创建供 P2P 使用，并非第二块无线网卡。当前未连接，不影响 wlan0 已建立的连接；没有为了隐藏图标而关闭接口。
 - [普通 CAN / CAN FD、1M / 5M 怎么区分？](docs/faq/can.md)：500k 是配置值；FD 5M 是数据阶段速率。收齐帧仍可能发生总线错误，不能用零丢帧替代严格验收。
-- [485 能跑多快？两路分别在哪？](docs/faq/rs485.md)：UART4 / UART7；1.5M 是已测持续通过最高档，不是证明了物理极限。
+- [485 能跑多快？两路分别在哪？](docs/faq/rs485.md)：UART4 / UART7；历史1.5M通过，换芯片后本次持续通过最高已测1M，两者均不是物理极限。
 - [Chromium 打不开、llvmpipe 和无屏桌面](docs/faq/desktop.md)、[启动耗时的正确口径](docs/faq/boot.md)、[系统图标与开机画面](docs/BRANDING.md)。
 
 [完整问答索引](docs/FAQ.md) · [从接手到交付操作单](docs/FIRST_BOOT.md) · [Wiki 维护与 Cloudflare 发布](wiki/README.md)。后续有价值的问题补入 Markdown，保留实测日期、证据和未验证范围，再构建发布；网页与仓库使用同一份正文。
@@ -48,7 +49,7 @@ bash /tmp/rk3588-kit.sh verify --physical
 
 已有设备保留密码重复配置：`setup --carrier lbm5-diban-v01a --keep-password`。初始账户默认自动识别，也可 `--source-user cat`；第二路485未焊接用 `--rs485-2 off`。公开脚本不含统一默认密码、Wi-Fi凭据或设备远控身份。
 
-Git clone 用户执行 `sudo ./board/setup.sh --carrier lbm5-diban-v01a`；增量优化仍用 `board/optimize.sh`，验证仍用 `board/verify.sh`。`--dry-run` 只预检，优化和配置不发送总线帧。回退与缺少组件时的参数见 [操作单](docs/FIRST_BOOT.md) 和 [接线/增量说明](docs/BOARD_KIT.md)。`docs/pdf/` 保留 v0.2 历史报告，当前入口以 v0.3 操作单为准。
+Git clone 用户执行 `sudo ./board/setup.sh --carrier lbm5-diban-v01a`；增量优化仍用 `board/optimize.sh`，验证仍用 `board/verify.sh`。`--dry-run` 只预检，优化和配置不发送总线帧。回退与缺少组件时的参数见 [操作单](docs/FIRST_BOOT.md) 和 [接线/增量说明](docs/BOARD_KIT.md)。`docs/pdf/` 保留 v0.2 历史报告及2026-10-27换芯片复测补充报告，当前配置入口以 v0.3 操作单为准。
 
 ## 系统标志
 

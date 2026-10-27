@@ -1,0 +1,838 @@
+{
+  "date": "2026-10-27",
+  "started_at": "2026-10-27T11:00:34.863336+08:00",
+  "ended_at": "2026-10-27T11:14:49.115000+08:00",
+  "hardware_change": {
+    "basis": "User reports replacement on the same board; part marking not independently inspected",
+    "new_transceiver": "型号待用户确认，未独立拍摄丝印",
+    "channels_replaced": "更换一路还是两路待用户确认"
+  },
+  "board": "RK3588 / LBM5-DIBAN-V01A",
+  "kernel": "6.1.172",
+  "ports": [
+    "UART4 / ttyS4",
+    "UART7 / ttyS7"
+  ],
+  "format": "8N1, physically cross-connected, half duplex alternating directions",
+  "highest_sustained_passed_baud_this_run": 1000000,
+  "highest_tested_rate_without_any_failed_repetition": 1000000,
+  "all_requested_rates_strict_pass": false,
+  "script_sha256": "9f3aa632c10beb9a3aff0e8020ff5b784aaaf7b97bd392a60a515e2b135d50b4",
+  "script_same_as_20261025": true,
+  "short_test": {
+    "each_direction_bytes": 32768,
+    "turns": 50,
+    "cases": [
+      {
+        "rate": 115200,
+        "pass": true,
+        "error_delta": {
+          "/dev/ttyS4": {
+            "frame": 0,
+            "overrun": 0,
+            "parity": 0,
+            "break": 0,
+            "buf_overrun": 0
+          },
+          "/dev/ttyS7": {
+            "frame": 0,
+            "overrun": 0,
+            "parity": 0,
+            "break": 0,
+            "buf_overrun": 0
+          }
+        }
+      },
+      {
+        "rate": 230400,
+        "pass": true,
+        "error_delta": {
+          "/dev/ttyS4": {
+            "frame": 0,
+            "overrun": 0,
+            "parity": 0,
+            "break": 0,
+            "buf_overrun": 0
+          },
+          "/dev/ttyS7": {
+            "frame": 0,
+            "overrun": 0,
+            "parity": 0,
+            "break": 0,
+            "buf_overrun": 0
+          }
+        }
+      },
+      {
+        "rate": 460800,
+        "pass": true,
+        "error_delta": {
+          "/dev/ttyS4": {
+            "frame": 0,
+            "overrun": 0,
+            "parity": 0,
+            "break": 0,
+            "buf_overrun": 0
+          },
+          "/dev/ttyS7": {
+            "frame": 0,
+            "overrun": 0,
+            "parity": 0,
+            "break": 0,
+            "buf_overrun": 0
+          }
+        }
+      },
+      {
+        "rate": 500000,
+        "pass": true,
+        "error_delta": {
+          "/dev/ttyS4": {
+            "frame": 0,
+            "overrun": 0,
+            "parity": 0,
+            "break": 0,
+            "buf_overrun": 0
+          },
+          "/dev/ttyS7": {
+            "frame": 0,
+            "overrun": 0,
+            "parity": 0,
+            "break": 0,
+            "buf_overrun": 0
+          }
+        }
+      },
+      {
+        "rate": 921600,
+        "pass": true,
+        "error_delta": {
+          "/dev/ttyS4": {
+            "frame": 0,
+            "overrun": 0,
+            "parity": 0,
+            "break": 0,
+            "buf_overrun": 0
+          },
+          "/dev/ttyS7": {
+            "frame": 0,
+            "overrun": 0,
+            "parity": 0,
+            "break": 0,
+            "buf_overrun": 0
+          }
+        }
+      },
+      {
+        "rate": 1000000,
+        "pass": true,
+        "error_delta": {
+          "/dev/ttyS4": {
+            "frame": 0,
+            "overrun": 0,
+            "parity": 0,
+            "break": 0,
+            "buf_overrun": 0
+          },
+          "/dev/ttyS7": {
+            "frame": 0,
+            "overrun": 0,
+            "parity": 0,
+            "break": 0,
+            "buf_overrun": 0
+          }
+        }
+      },
+      {
+        "rate": 1500000,
+        "pass": true,
+        "error_delta": {
+          "/dev/ttyS4": {
+            "frame": 0,
+            "overrun": 0,
+            "parity": 0,
+            "break": 0,
+            "buf_overrun": 0
+          },
+          "/dev/ttyS7": {
+            "frame": 0,
+            "overrun": 0,
+            "parity": 0,
+            "break": 0,
+            "buf_overrun": 0
+          }
+        }
+      },
+      {
+        "rate": 2000000,
+        "pass": true,
+        "error_delta": {
+          "/dev/ttyS4": {
+            "frame": 0,
+            "overrun": 0,
+            "parity": 0,
+            "break": 0,
+            "buf_overrun": 0
+          },
+          "/dev/ttyS7": {
+            "frame": 0,
+            "overrun": 0,
+            "parity": 0,
+            "break": 0,
+            "buf_overrun": 0
+          }
+        }
+      },
+      {
+        "rate": 2500000,
+        "pass": true,
+        "error_delta": {
+          "/dev/ttyS4": {
+            "frame": 0,
+            "overrun": 0,
+            "parity": 0,
+            "break": 0,
+            "buf_overrun": 0
+          },
+          "/dev/ttyS7": {
+            "frame": 0,
+            "overrun": 0,
+            "parity": 0,
+            "break": 0,
+            "buf_overrun": 0
+          }
+        }
+      },
+      {
+        "rate": 3000000,
+        "pass": true,
+        "error_delta": {
+          "/dev/ttyS4": {
+            "frame": 0,
+            "overrun": 0,
+            "parity": 0,
+            "break": 0,
+            "buf_overrun": 0
+          },
+          "/dev/ttyS7": {
+            "frame": 0,
+            "overrun": 0,
+            "parity": 0,
+            "break": 0,
+            "buf_overrun": 0
+          }
+        }
+      },
+      {
+        "rate": 3500000,
+        "pass": true,
+        "error_delta": {
+          "/dev/ttyS4": {
+            "frame": 0,
+            "overrun": 0,
+            "parity": 0,
+            "break": 0,
+            "buf_overrun": 0
+          },
+          "/dev/ttyS7": {
+            "frame": 0,
+            "overrun": 0,
+            "parity": 0,
+            "break": 0,
+            "buf_overrun": 0
+          }
+        }
+      },
+      {
+        "rate": 4000000,
+        "pass": true,
+        "error_delta": {
+          "/dev/ttyS4": {
+            "frame": 0,
+            "overrun": 0,
+            "parity": 0,
+            "break": 0,
+            "buf_overrun": 0
+          },
+          "/dev/ttyS7": {
+            "frame": 0,
+            "overrun": 0,
+            "parity": 0,
+            "break": 0,
+            "buf_overrun": 0
+          }
+        }
+      }
+    ]
+  },
+  "continuous_tests": [
+    {
+      "rate": 4000000,
+      "strict_pass": false,
+      "streams_completed_including_failed": 3,
+      "rounds_requested": 10,
+      "each_direction_each_round_bytes": 1048576,
+      "tx_bytes": 3145728,
+      "rx_bytes": 3145725,
+      "error_delta": {
+        "/dev/ttyS4": {
+          "frame": 0,
+          "overrun": 0,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        },
+        "/dev/ttyS7": {
+          "frame": 0,
+          "overrun": 2,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        }
+      },
+      "turnaround": null,
+      "first_failed_stream": {
+        "direction": "/dev/ttyS4 -> /dev/ttyS7",
+        "baud": 4000000,
+        "format": "8N1",
+        "pattern": "random",
+        "expected_bytes": 1048576,
+        "sent_bytes": 1048576,
+        "received_bytes": 1048573,
+        "mismatch_or_length_bytes": 798891,
+        "sender_echo_bytes": 0,
+        "tx_sha256": "2ecfca557a1f61dda2edbe986edb150b8bfe150ab2c39f4cb8425f77336329af",
+        "rx_sha256": "e6c35c68ff9a51aad981b589346831b1b0cde81f42e2821391c120fbfacf3745",
+        "elapsed_seconds": 3.313136,
+        "application_payload_kBps": 316.49,
+        "artificial_interpacket_gap": false,
+        "write_error": null,
+        "pass": false,
+        "round": 2
+      },
+      "configuration": {
+        "readback": {
+          "/dev/ttyS4": {
+            "ispeed": 4000000,
+            "ospeed": 4000000,
+            "cflag": "0x1cbf",
+            "pyserial_rate": 4000000
+          },
+          "/dev/ttyS7": {
+            "ispeed": 4000000,
+            "ospeed": 4000000,
+            "cflag": "0x1cbf",
+            "pyserial_rate": 4000000
+          }
+        },
+        "clocks_hz": {
+          "clk_uart4_src": 1188000000,
+          "clk_uart4_frac": 64000000,
+          "clk_uart4": 64000000,
+          "sclk_uart4": 64000000,
+          "clk_uart7_src": 1188000000,
+          "clk_uart7_frac": 64000000,
+          "clk_uart7": 64000000,
+          "sclk_uart7": 64000000
+        }
+      },
+      "application_payload_kBps_mean": 344.606,
+      "started_at": "2026-10-27T11:02:44.454714+08:00",
+      "ended_at": "2026-10-27T11:02:54.251442+08:00"
+    },
+    {
+      "rate": 3500000,
+      "strict_pass": false,
+      "streams_completed_including_failed": 1,
+      "rounds_requested": 10,
+      "each_direction_each_round_bytes": 1048576,
+      "tx_bytes": 1048576,
+      "rx_bytes": 1048576,
+      "error_delta": {
+        "/dev/ttyS4": {
+          "frame": 0,
+          "overrun": 0,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        },
+        "/dev/ttyS7": {
+          "frame": 0,
+          "overrun": 2,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        }
+      },
+      "turnaround": null,
+      "first_failed_stream": {
+        "direction": "/dev/ttyS4 -> /dev/ttyS7",
+        "baud": 3500000,
+        "format": "8N1",
+        "pattern": "mixed",
+        "expected_bytes": 1048576,
+        "sent_bytes": 1048576,
+        "received_bytes": 1048576,
+        "mismatch_or_length_bytes": 66,
+        "sender_echo_bytes": 0,
+        "tx_sha256": "165e165c352c20c437b1677420214f0c64f8602f5d13afb6040817402e042379",
+        "rx_sha256": "61e6bb25c390919787b581490ef951e4485817553df836ff854b2e7bda3df4c2",
+        "elapsed_seconds": 3.464473,
+        "application_payload_kBps": 302.665,
+        "artificial_interpacket_gap": false,
+        "write_error": null,
+        "pass": false,
+        "round": 1
+      },
+      "configuration": {
+        "readback": {
+          "/dev/ttyS4": {
+            "ispeed": 3500000,
+            "ospeed": 3500000,
+            "cflag": "0x1cbe",
+            "pyserial_rate": 3500000
+          },
+          "/dev/ttyS7": {
+            "ispeed": 3500000,
+            "ospeed": 3500000,
+            "cflag": "0x1cbe",
+            "pyserial_rate": 3500000
+          }
+        },
+        "clocks_hz": {
+          "clk_uart4_src": 1188000000,
+          "clk_uart4_frac": 56000000,
+          "clk_uart4": 56000000,
+          "sclk_uart4": 56000000,
+          "clk_uart7_src": 1188000000,
+          "clk_uart7_frac": 56000000,
+          "clk_uart7": 56000000,
+          "sclk_uart7": 56000000
+        }
+      },
+      "application_payload_kBps_mean": null,
+      "started_at": "2026-10-27T11:02:54.252866+08:00",
+      "ended_at": "2026-10-27T11:02:57.847421+08:00"
+    },
+    {
+      "rate": 3000000,
+      "strict_pass": false,
+      "streams_completed_including_failed": 3,
+      "rounds_requested": 10,
+      "each_direction_each_round_bytes": 1048576,
+      "tx_bytes": 3145728,
+      "rx_bytes": 3145727,
+      "error_delta": {
+        "/dev/ttyS4": {
+          "frame": 0,
+          "overrun": 0,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        },
+        "/dev/ttyS7": {
+          "frame": 0,
+          "overrun": 1,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        }
+      },
+      "turnaround": null,
+      "first_failed_stream": {
+        "direction": "/dev/ttyS4 -> /dev/ttyS7",
+        "baud": 3000000,
+        "format": "8N1",
+        "pattern": "random",
+        "expected_bytes": 1048576,
+        "sent_bytes": 1048576,
+        "received_bytes": 1048575,
+        "mismatch_or_length_bytes": 412958,
+        "sender_echo_bytes": 0,
+        "tx_sha256": "36f50ec3fc116aed8969348326b4160ea5be740ae150237def7ff3bafd93ddb8",
+        "rx_sha256": "3a7ca10108da370eb310f5810797aa7b82701caaf91590a6c1a10c9d639ba6e5",
+        "elapsed_seconds": 4.293036,
+        "application_payload_kBps": 244.25,
+        "artificial_interpacket_gap": false,
+        "write_error": null,
+        "pass": false,
+        "round": 2
+      },
+      "configuration": {
+        "readback": {
+          "/dev/ttyS4": {
+            "ispeed": 3000000,
+            "ospeed": 3000000,
+            "cflag": "0x1cbd",
+            "pyserial_rate": 3000000
+          },
+          "/dev/ttyS7": {
+            "ispeed": 3000000,
+            "ospeed": 3000000,
+            "cflag": "0x1cbd",
+            "pyserial_rate": 3000000
+          }
+        },
+        "clocks_hz": {
+          "clk_uart4_src": 1188000000,
+          "clk_uart4_frac": 48000000,
+          "clk_uart4": 48000000,
+          "sclk_uart4": 48000000,
+          "clk_uart7_src": 1188000000,
+          "clk_uart7_frac": 48000000,
+          "clk_uart7": 48000000,
+          "sclk_uart7": 48000000
+        }
+      },
+      "application_payload_kBps_mean": 263.087,
+      "started_at": "2026-10-27T11:02:57.849384+08:00",
+      "ended_at": "2026-10-27T11:03:10.477148+08:00"
+    },
+    {
+      "rate": 2500000,
+      "strict_pass": false,
+      "streams_completed_including_failed": 12,
+      "rounds_requested": 10,
+      "each_direction_each_round_bytes": 1048576,
+      "tx_bytes": 12582912,
+      "rx_bytes": 12582912,
+      "error_delta": {
+        "/dev/ttyS4": {
+          "frame": 0,
+          "overrun": 1,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        },
+        "/dev/ttyS7": {
+          "frame": 0,
+          "overrun": 0,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        }
+      },
+      "turnaround": null,
+      "first_failed_stream": {
+        "direction": "/dev/ttyS7 -> /dev/ttyS4",
+        "baud": 2500000,
+        "format": "8N1",
+        "pattern": "random",
+        "expected_bytes": 1048576,
+        "sent_bytes": 1048576,
+        "received_bytes": 1048576,
+        "mismatch_or_length_bytes": 64,
+        "sender_echo_bytes": 0,
+        "tx_sha256": "656e3de76f6f404bc40f9b07e8a38d06a538247f98e5a8977bfe0425b32bde48",
+        "rx_sha256": "4edc956e46bb8359fc2f83b108b9dde532d3579feeb3ece9ac64093f65719b23",
+        "elapsed_seconds": 4.767756,
+        "application_payload_kBps": 219.931,
+        "artificial_interpacket_gap": false,
+        "write_error": null,
+        "pass": false,
+        "round": 6
+      },
+      "configuration": {
+        "readback": {
+          "/dev/ttyS4": {
+            "ispeed": 2500000,
+            "ospeed": 2500000,
+            "cflag": "0x1cbc",
+            "pyserial_rate": 2500000
+          },
+          "/dev/ttyS7": {
+            "ispeed": 2500000,
+            "ospeed": 2500000,
+            "cflag": "0x1cbc",
+            "pyserial_rate": 2500000
+          }
+        },
+        "clocks_hz": {
+          "clk_uart4_src": 1188000000,
+          "clk_uart4_frac": 40000000,
+          "clk_uart4": 40000000,
+          "sclk_uart4": 40000000,
+          "clk_uart7_src": 1188000000,
+          "clk_uart7_frac": 40000000,
+          "clk_uart7": 40000000,
+          "sclk_uart7": 40000000
+        }
+      },
+      "application_payload_kBps_mean": 219.95,
+      "started_at": "2026-10-27T11:03:10.479234+08:00",
+      "ended_at": "2026-10-27T11:04:09.018678+08:00"
+    },
+    {
+      "rate": 2000000,
+      "strict_pass": false,
+      "streams_completed_including_failed": 4,
+      "rounds_requested": 10,
+      "each_direction_each_round_bytes": 1048576,
+      "tx_bytes": 4194304,
+      "rx_bytes": 4194298,
+      "error_delta": {
+        "/dev/ttyS4": {
+          "frame": 0,
+          "overrun": 1,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        },
+        "/dev/ttyS7": {
+          "frame": 0,
+          "overrun": 0,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        }
+      },
+      "turnaround": null,
+      "first_failed_stream": {
+        "direction": "/dev/ttyS7 -> /dev/ttyS4",
+        "baud": 2000000,
+        "format": "8N1",
+        "pattern": "random",
+        "expected_bytes": 1048576,
+        "sent_bytes": 1048576,
+        "received_bytes": 1048570,
+        "mismatch_or_length_bytes": 992929,
+        "sender_echo_bytes": 0,
+        "tx_sha256": "281c9ae59a52530d8204247c0038501d9bc7e97bb02ee6f5ad7106d9c1ee4b39",
+        "rx_sha256": "6c9590939abf59b1937f7d9176d98804fdd9dbbac13afac33c60b44571ca3160",
+        "elapsed_seconds": 6.230552,
+        "application_payload_kBps": 168.295,
+        "artificial_interpacket_gap": false,
+        "write_error": null,
+        "pass": false,
+        "round": 2
+      },
+      "configuration": {
+        "readback": {
+          "/dev/ttyS4": {
+            "ispeed": 2000000,
+            "ospeed": 2000000,
+            "cflag": "0x1cbb",
+            "pyserial_rate": 2000000
+          },
+          "/dev/ttyS7": {
+            "ispeed": 2000000,
+            "ospeed": 2000000,
+            "cflag": "0x1cbb",
+            "pyserial_rate": 2000000
+          }
+        },
+        "clocks_hz": {
+          "clk_uart4_src": 1188000000,
+          "clk_uart4_frac": 32000000,
+          "clk_uart4": 32000000,
+          "sclk_uart4": 32000000,
+          "clk_uart7_src": 1188000000,
+          "clk_uart7_frac": 32000000,
+          "clk_uart7": 32000000,
+          "sclk_uart7": 32000000
+        }
+      },
+      "application_payload_kBps_mean": 176.407,
+      "started_at": "2026-10-27T11:04:09.021470+08:00",
+      "ended_at": "2026-10-27T11:04:33.582040+08:00"
+    },
+    {
+      "rate": 1500000,
+      "strict_pass": false,
+      "streams_completed_including_failed": 12,
+      "rounds_requested": 10,
+      "each_direction_each_round_bytes": 1048576,
+      "tx_bytes": 12582912,
+      "rx_bytes": 12582912,
+      "error_delta": {
+        "/dev/ttyS4": {
+          "frame": 0,
+          "overrun": 1,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        },
+        "/dev/ttyS7": {
+          "frame": 0,
+          "overrun": 0,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        }
+      },
+      "turnaround": null,
+      "first_failed_stream": {
+        "direction": "/dev/ttyS7 -> /dev/ttyS4",
+        "baud": 1500000,
+        "format": "8N1",
+        "pattern": "random",
+        "expected_bytes": 1048576,
+        "sent_bytes": 1048576,
+        "received_bytes": 1048576,
+        "mismatch_or_length_bytes": 64,
+        "sender_echo_bytes": 0,
+        "tx_sha256": "06915e1f28038158ace3188a987aecc6ff750c352fa912667cd1aaaf652aafc0",
+        "rx_sha256": "5a197bab7052c02054fb7952545fcc482d4213aa5c84620565ae7afd1fa2bf79",
+        "elapsed_seconds": 7.910993,
+        "application_payload_kBps": 132.547,
+        "artificial_interpacket_gap": false,
+        "write_error": null,
+        "pass": false,
+        "round": 6
+      },
+      "configuration": {
+        "readback": {
+          "/dev/ttyS4": {
+            "ispeed": 1500000,
+            "ospeed": 1500000,
+            "cflag": "0x1cba",
+            "pyserial_rate": 1500000
+          },
+          "/dev/ttyS7": {
+            "ispeed": 1500000,
+            "ospeed": 1500000,
+            "cflag": "0x1cba",
+            "pyserial_rate": 1500000
+          }
+        },
+        "clocks_hz": {
+          "clk_uart4_src": 1188000000,
+          "clk_uart4_frac": 24000000,
+          "clk_uart4": 24000000,
+          "sclk_uart4": 24000000,
+          "clk_uart7_src": 1188000000,
+          "clk_uart7_frac": 24000000,
+          "clk_uart7": 24000000,
+          "sclk_uart7": 24000000
+        }
+      },
+      "application_payload_kBps_mean": 132.539,
+      "started_at": "2026-10-27T11:04:33.585036+08:00",
+      "ended_at": "2026-10-27T11:06:09.849829+08:00"
+    },
+    {
+      "rate": 1000000,
+      "strict_pass": true,
+      "streams_completed_including_failed": 20,
+      "rounds_requested": 10,
+      "each_direction_each_round_bytes": 1048576,
+      "tx_bytes": 20971520,
+      "rx_bytes": 20971520,
+      "error_delta": {
+        "/dev/ttyS4": {
+          "frame": 0,
+          "overrun": 0,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        },
+        "/dev/ttyS7": {
+          "frame": 0,
+          "overrun": 0,
+          "parity": 0,
+          "break": 0,
+          "buf_overrun": 0
+        }
+      },
+      "turnaround": {
+        "requested_turns": 1000,
+        "completed_turns": 1000,
+        "received_bytes": 237000,
+        "pass": true,
+        "failure": null,
+        "inter_transaction_idle_ms": 2
+      },
+      "first_failed_stream": null,
+      "configuration": {
+        "readback": {
+          "/dev/ttyS4": {
+            "ispeed": 1000000,
+            "ospeed": 1000000,
+            "cflag": "0x1cb8",
+            "pyserial_rate": 1000000
+          },
+          "/dev/ttyS7": {
+            "ispeed": 1000000,
+            "ospeed": 1000000,
+            "cflag": "0x1cb8",
+            "pyserial_rate": 1000000
+          }
+        },
+        "clocks_hz": {
+          "clk_uart4_src": 1188000000,
+          "clk_uart4_frac": 16000000,
+          "clk_uart4": 16000000,
+          "sclk_uart4": 16000000,
+          "clk_uart7_src": 1188000000,
+          "clk_uart7_frac": 16000000,
+          "clk_uart7": 16000000,
+          "sclk_uart7": 16000000
+        }
+      },
+      "application_payload_kBps_mean": 89.033,
+      "started_at": "2026-10-27T11:09:32.270014+08:00",
+      "ended_at": "2026-10-27T11:13:45.233611+08:00"
+    }
+  ],
+  "negative_control_detected": true,
+  "restoration": {
+    "both_original_termios_restored": true,
+    "default_baud": 115200,
+    "persistent_configuration_hashes_unchanged": true,
+    "no_reboot": true,
+    "post_115200_physical_pass": true,
+    "UART_DMA": "not enabled"
+  },
+  "previous_test": {
+    "date": "2026-10-25",
+    "highest_sustained_passed_baud": 1500000,
+    "source": "board/evidence/20261025-rs485-rate.json",
+    "prior_failures_retained": true
+  },
+  "limits": [
+    "New transceiver part number and number of replaced channels depend on user identification; no photographed marking or supply/termination measurement.",
+    "The interval between1M and1.5M was not finely scanned; highest tested pass is not an exact limit.",
+    "Same-SoC two-port bench; no independent baud/bit-width instrument or external multi-node acceptance.",
+    "Configured and TCGETS2 read-back rates; official BSP UART documentation states up to4M, not a proof of transceiver or full-board physical limit.",
+    "A finite 20MiB/1000-turn test per passing rate is not continuous long-duration, EMC, temperature, long-line or production qualification.",
+    "Equal length does not prove equal bytes; positional mismatches after missing bytes are not independent bit-error counts.",
+    "UART overrun is an observed receiver symptom, not a proven sole root cause or proof of the new chip rating."
+  ],
+  "references": [
+    {
+      "title": "LubanCat RK3588 UART documentation",
+      "url": "https://doc.embedfire.com/linux/rk3588/quick_start/zh/latest/quick_start/40pin/uart/uart.html",
+      "checked": "2026-10-27"
+    }
+  ],
+  "evidence": [
+    {
+      "name": "extra-stress-1000000.json",
+      "sha256": "49716407133908495cac8bdaf38546ab2611f68f6f9c5494afb49515a38ea62f"
+    },
+    {
+      "name": "post-115200.json",
+      "sha256": "92fc025ecf13e2064d625661e279fe48e2efbb3a3a533e5150f2f1343d0ae2a1"
+    },
+    {
+      "name": "postflight.json",
+      "sha256": "f0b542ff7a7875a7d9ffa9d93269b13207fc135b9b69a92584767a71dbaf08cc"
+    },
+    {
+      "name": "preflight.json",
+      "sha256": "d5a5bd29d03b4d7debdeeac263b7699095fefc898295b8e203195bc6321a2aa6"
+    },
+    {
+      "name": "runtime-diagnostic.json",
+      "sha256": "c96e8bc04f26c04ab007e1fa1c68738b156a6822c495115b8394a4b6b932891c"
+    },
+    {
+      "name": "stress.json",
+      "sha256": "7dea02e8eb38543e54df0cff2f79b58ebde050dae6584b9fa8cff85150cfb3ac"
+    },
+    {
+      "name": "sweep.json",
+      "sha256": "051b7ceef8fd1213dbbfd82f398ae97668145bbb1553c608b032ae223be0a584"
+    }
+  ]
+}

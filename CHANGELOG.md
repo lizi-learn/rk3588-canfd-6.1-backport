@@ -1,5 +1,11 @@
 # Changelog
 
+## RS485 chip-swap retest - 2026-10-27
+
+- Preserve the new hardware-state test separately: short sweeps pass through4M, sustained1.5M..4M fail with data mismatches and UART overruns;1M passes20MiB plus1000 turnarounds.
+- Keep the same rate-test source hash and publish that physical-test tool for reproduction; restore115200 and retain prior1.5M historical evidence.
+- Add a comparison report and Wiki lesson; do not infer a transceiver rating or unique root cause from this finite bench test.
+
 ## Repository rename - 2026-10-26
 
 - Rename the repository to `lizi-learn/ymbot-5io-system-optimization`, matching the broader system-optimization scope.

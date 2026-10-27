@@ -1,0 +1,170 @@
+#!/usr/bin/python3
+# SPDX-License-Identifier: GPL-2.0-only
+"""Bounded physical RS485 rate sweep. No internal loopback or persistent changes."""
+import argparse,array,datetime,fcntl,hashlib,json,mmap,os,platform,select,signal,struct,subprocess,sys,termios,threading,time
+from pathlib import Path
+import serial
+PORTS={'/dev/ttyS4':('feb70000.serial',0xfeb70000,4),'/dev/ttyS7':('feba0000.serial',0xfeba0000,7)}
+ERRORS=('frame','overrun','parity','break','buf_overrun')
+ROOT=Path('/var/lib/rk3588-board-kit/rs485-rate')
+def timestamp():return datetime.datetime.now().astimezone().isoformat()
+def save(path,data):
+ p=Path(path);p.parent.mkdir(mode=0o700,parents=True,exist_ok=True);t=p.with_suffix('.new');t.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n');t.chmod(0o600);os.replace(t,p)
+def counters(ports):
+ out={}
+ for p in ports:
+  a=array.array('i',[0]*20);fcntl.ioctl(p.fileno(),0x545d,a,True)
+  out[p.port]=dict(zip(['cts','dsr','rng','dcd','rx','tx','frame','overrun','parity','break','buf_overrun'],a))
+ return out
+def delta(before,after):return {n:{k:after[n][k]-d[k] for k in ERRORS} for n,d in before.items()}
+def modes():
+ out={};fd=os.open('/dev/mem',os.O_RDONLY|os.O_SYNC)
+ try:
+  for dev,(_,addr,_) in PORTS.items():
+   with mmap.mmap(fd,4096,mmap.MAP_SHARED,mmap.PROT_READ,offset=addr) as mem:mcr=struct.unpack_from('<I',mem,0x10)[0]
+   out[dev]={'mcr':mcr,'internal_loopback':bool(mcr&16)}
+ finally:os.close(fd)
+ return out
+def readback(p):
+ raw=bytearray(44);fcntl.ioctl(p.fileno(),0x802c542a,raw,True);v=struct.unpack('=IIIIB19sII',raw)
+ return {'ispeed':v[-2],'ospeed':v[-1],'cflag':hex(v[2]),'pyserial_rate':p.baudrate}
+def clocks():
+ out={}
+ for _,(_,_,n) in PORTS.items():
+  for k in [f'clk_uart{n}_src',f'clk_uart{n}_frac',f'clk_uart{n}',f'sclk_uart{n}']:
+   p=Path('/sys/kernel/debug/clk',k,'clk_rate')
+   out[k]=int(p.read_text()) if p.exists() else None
+ return out
+def configure(ports,rate):
+ for p in ports:p.flush()
+ for p in ports:p.baudrate=rate
+ time.sleep(.03)
+ for p in ports:p.reset_input_buffer()
+ rb={p.port:readback(p) for p in ports}
+ if any(x['ospeed']!=rate or x['ispeed']!=rate for x in rb.values()):raise RuntimeError('Driver did not read back the requested rate: '+repr(rb))
+ return {'readback':rb,'clocks_hz':clocks()}
+def transfer(tx,rx,total,pattern='mixed'):
+ nonce=os.urandom(32)
+ if pattern=='mixed':
+  chunk=bytes(256)+bytes([255])*256+bytes([0x55,0xaa])*128+bytes(range(256))+hashlib.shake_256(nonce).digest(3072)
+  data=(chunk*((total+len(chunk)-1)//len(chunk)))[:total]
+ else:data=hashlib.shake_256(nonce).digest(total)
+ for p in [tx,rx]:p.reset_input_buffer()
+ expected_seconds=total*10/tx.baudrate;deadline=time.monotonic()+expected_seconds+5
+ tx.write_timeout=expected_seconds+3
+ sent=0;write_error=None;finished=threading.Event()
+ def writer():
+  nonlocal sent,write_error
+  try:
+   # One continuous write; no artificial packet gaps. Reader drains both peer and echo.
+   sent=tx.write(data);tx.flush()
+  except Exception as e:write_error=repr(e)
+  finally:finished.set()
+ t=threading.Thread(target=writer);start=time.monotonic();t.start();got=bytearray();echo=0;last_peer=start
+ try:
+  while time.monotonic()<deadline:
+   ready=select.select([tx.fileno(),rx.fileno()],[],[],.005)[0]
+   for fd in ready:
+    p=rx if fd==rx.fileno() else tx
+    block=p.read(max(1,p.in_waiting))
+    if p is rx:got.extend(block);last_peer=time.monotonic()
+    else:echo+=len(block)
+   if finished.is_set() and (len(got)>=total or time.monotonic()-last_peer>.3):break
+  # Catch late/extra bytes and finish draining the sender's physical echo.
+  tail=time.monotonic()+.03
+  while time.monotonic()<tail:
+   for p in [tx,rx]:
+    block=p.read(p.in_waiting)
+    if p is rx:got.extend(block)
+    else:echo+=len(block)
+   time.sleep(.001)
+ finally:
+  t.join(timeout=max(1,deadline-time.monotonic()+1))
+  if t.is_alive():tx.cancel_write();t.join(2)
+ elapsed=time.monotonic()-start
+ wrong=sum(x!=y for x,y in zip(data,got))+abs(len(data)-len(got))
+ ok=sent==total and bytes(got)==data and write_error is None and not t.is_alive()
+ return {'direction':tx.port+' -> '+rx.port,'baud':tx.baudrate,'format':'8N1','pattern':pattern,'expected_bytes':total,'sent_bytes':sent,'received_bytes':len(got),'mismatch_or_length_bytes':wrong,'sender_echo_bytes':echo,'tx_sha256':hashlib.sha256(data).hexdigest(),'rx_sha256':hashlib.sha256(got).hexdigest(),'elapsed_seconds':round(elapsed,6),'application_payload_kBps':round(len(got)/elapsed/1000,3),'artificial_interpacket_gap':False,'write_error':write_error,'pass':ok}
+def turnaround(ports,count=300):
+ # Isolated random packets in alternating directions, with a finite 2ms bus-idle margin.
+ cases=[]
+ for turn in range(count):
+  tx,rx=ports if turn%2==0 else ports[::-1]
+  n=[1,2,7,31,64,255,512,1024][turn%8];data=os.urandom(n)
+  for p in ports:p.reset_input_buffer()
+  tx.write_timeout=2;written=tx.write(data);tx.flush();got=bytearray();deadline=time.monotonic()+.4
+  while len(got)<n and time.monotonic()<deadline:
+   for p in ports:
+    block=p.read(p.in_waiting)
+    if p is rx:got.extend(block)
+   if len(got)<n:time.sleep(.0002)
+  time.sleep(.002)
+  got.extend(rx.read(rx.in_waiting));tx.read(tx.in_waiting)
+  c={'turn':turn,'bytes':n,'direction':tx.port+' -> '+rx.port,'pass':written==n and bytes(got)==data}
+  cases.append(c)
+  if not c['pass']:break
+ return {'requested_turns':count,'completed_turns':len(cases),'received_bytes':sum(c['bytes'] for c in cases if c['pass']),'pass':len(cases)==count and all(c['pass'] for c in cases),'failure':next((c for c in cases if not c['pass']),None),'inter_transaction_idle_ms':2}
+def case(ports,rate,total,rounds=1,turns=0):
+ r={'started_at':timestamp(),'rate':rate,'continuous_bytes_each_direction_each_round':total,'rounds_requested':rounds,'tests':[]}
+ try:
+  r['configuration']=configure(ports,rate);r['counters_before']=counters(ports)
+  for n in range(rounds):
+   for tx,rx in [ports,ports[::-1]]:
+    c=transfer(tx,rx,total,'mixed' if n%2==0 else 'random');c['round']=n+1;r['tests'].append(c)
+    print(json.dumps({'progress':'stream','rate':rate,'round':n+1,'direction':c['direction'],'bytes':c['received_bytes'],'pass':c['pass']}),flush=True)
+    if not c['pass']:raise RuntimeError('Payload comparison failed.')
+  if turns:r['turnaround']=turnaround(ports,turns)
+ except Exception as e:r['exception']=str(e)
+ finally:
+  r['counters_after']=counters(ports)
+  if 'counters_before' in r:r['error_delta']=delta(r['counters_before'],r['counters_after'])
+  r['ended_at']=timestamp();r['pass']='exception' not in r and len(r['tests'])==rounds*2 and all(c['pass'] for c in r['tests']) and all(v==0 for d in r.get('error_delta',{}).values() for v in d.values()) and r.get('turnaround',{'pass':True})['pass']
+ return r
+
+def main():
+ ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--phase',choices=['sweep','stress'],required=True);ap.add_argument('--rates',default='115200,230400,460800,500000,921600,1000000,1500000,2000000,2500000,3000000,3500000,4000000');ap.add_argument('--rounds',type=int,default=3);ap.add_argument('--output',type=Path,required=True);a=ap.parse_args()
+ if not 1<=a.rounds<=10:raise ValueError('Stress rounds must be 1..10.')
+ if os.geteuid()!=0:raise RuntimeError('Root is required for UART hardware and error-counter inspection.')
+ rates=[int(x) for x in a.rates.split(',')]
+ if not rates or any(x<9600 or x>4000000 for x in rates):raise ValueError('Bounded to documented RK3588 UART 9600..4M range.')
+ lock=open('/run/lbm5-interface-test.lock','w');fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+ r={'device_alias':'lubancat-test','started_at':timestamp(),'phase':a.phase,'script_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),'kernel_release':platform.release(),'python_version':platform.python_version(),'pyserial_version':serial.VERSION,'rates_requested':rates,'uart_modes_before':modes(),'cases':[],'scope':'Two physically cross-wired UART/RS485 channels; no CAN configuration or traffic; same-board clocks, no independent bit-width measurement.','pass':False}
+ if any(x['internal_loopback'] for x in r['uart_modes_before'].values()):raise RuntimeError('UART internal loopback must be off.')
+ original={};ports=[]
+ def stop(signum,frame):raise KeyboardInterrupt('Interrupted by signal '+str(signum))
+ for s in [signal.SIGTERM,signal.SIGINT]:signal.signal(s,stop)
+ try:
+  for dev,(hw,_,_) in PORTS.items():
+   if hw not in Path('/sys/class/tty',Path(dev).name,'device').resolve().parts:raise RuntimeError('UART mapping differs.')
+   fd=os.open(dev,os.O_RDWR|os.O_NOCTTY|os.O_NONBLOCK)
+   try:original[dev]=termios.tcgetattr(fd)
+   finally:os.close(fd)
+  r['saved_termios']={dev:{'flags_and_speeds':attrs[:6],'control_chars':[x.hex() if isinstance(x,bytes) else x for x in attrs[6]]} for dev,attrs in original.items()}
+  for dev in PORTS:ports.append(serial.Serial(dev,115200,timeout=0,write_timeout=5,exclusive=True))
+  r['baseline']=case(ports,115200,256)
+  if not r['baseline']['pass']:raise RuntimeError('115200 physical baseline failed; cross-wiring no longer verified.')
+  for rate in rates:
+   c=case(ports,rate,32768 if a.phase=='sweep' else 1048576,1 if a.phase=='sweep' else a.rounds,50 if a.phase=='sweep' else 1000)
+   r['cases'].append(c);save(a.output,r)
+   print(json.dumps({'rate':rate,'phase':a.phase,'pass':c['pass'],'errors':c.get('error_delta'),'exception':c.get('exception'),'turns':c.get('turnaround',{}).get('completed_turns')}),flush=True)
+  if a.phase=='stress':
+   # Negative control: the same data must NOT survive a deliberate rate mismatch.
+   configure(ports,rates[-1]);ports[1].baudrate=115200 if rates[-1]!=115200 else 230400
+   n=transfer(ports[0],ports[1],64,'random');r['negative_control']={'tx_rate':ports[0].baudrate,'rx_rate':ports[1].baudrate,'expected_mismatch':not n['pass'],'observed':n}
+  r['pass']=all(c['pass'] for c in r['cases']) and (a.phase!='stress' or r['negative_control']['expected_mismatch'])
+ except BaseException as e:r['exception']=repr(e);r['pass']=False
+ finally:
+  for p in ports:
+   try:p.close()
+   except Exception:pass
+  restore={}
+  for dev,attrs in original.items():
+   fd=os.open(dev,os.O_RDWR|os.O_NOCTTY|os.O_NONBLOCK)
+   try:termios.tcsetattr(fd,termios.TCSANOW,attrs);termios.tcflush(fd,termios.TCIOFLUSH);restore[dev]=termios.tcgetattr(fd)==attrs
+   except Exception as e:restore[dev]=repr(e)
+   finally:os.close(fd)
+  r['termios_restored']=restore;r['uart_modes_after']=modes();r['ended_at']=timestamp()
+  r['pass']=r['pass'] and len(restore)==2 and all(v is True for v in restore.values()) and all(not x['internal_loopback'] for x in r['uart_modes_after'].values())
+  save(a.output,r);print(json.dumps({'result_file':str(a.output),'phase':a.phase,'pass':r['pass'],'restored':restore,'exception':r.get('exception')}),flush=True)
+ return 0 if r['pass'] else 1
+if __name__=='__main__':raise SystemExit(main())
